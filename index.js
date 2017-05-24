@@ -31,6 +31,9 @@ io.on('connection', function(socket){
     socket.join(socket.room);
     var newPlayer = new player(socket.id, socket.name, rooms[socket.room].players.length);
     rooms[socket.room].players.push(newPlayer);
+    // console.log(socket.handshake.address.address);
+    console.log(socket.request.connection.remoteAddress);
+    console.log(socket.request.connection.remotePort);
     // if(rooms.room.gameStarted || rooms.room.playerIndex == 9)
       // socket.disconnect('unauthorized');
     // else if (!socket.room.gameEnded){
