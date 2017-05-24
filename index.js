@@ -18,6 +18,7 @@ server.listen(port, function(){
 
 
 io.on('connection', function(socket){
+  socket.emit('getRooms', rooms);
   socket.on('room', function(arg){
     socket.join(arg.room);
     if(socket.room){
@@ -32,12 +33,12 @@ io.on('connection', function(socket){
     var newPlayer = new player(socket.id, socket.name, rooms[socket.room].players.length);
     rooms[socket.room].players.push(newPlayer);
     // console.log(socket.handshake.address.address);
-    console.log(socket.request.connection.remoteAddress);
-    console.log(socket.request.connection.remotePort);
+    // console.log(socket.request.connection.remoteAddress);
+    // console.log(socket.request.connection.remotePort);
     // if(rooms.room.gameStarted || rooms.room.playerIndex == 9)
       // socket.disconnect('unauthorized');
     // else if (!socket.room.gameEnded){
-    console.log(rooms[socket.room]);
+    console.log(rooms);
       console.log("Player Connected!");
       socket.emit('getPlayers', rooms[socket.room].players); // sendds
       // players.push(new player(socket.id, playerIndex++));
@@ -119,6 +120,8 @@ function leaveRoom(id, playerName) {
   
   for(i = 0; i < room.players.length; i++)
     if(room.players[i].name == playerName) room.players.splice(i, 1);
+    
+  //TODO: DELETE ROOM IF EMPTY
 }
 
 function fixPlayerPositions(){
