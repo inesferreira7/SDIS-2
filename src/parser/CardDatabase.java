@@ -16,21 +16,44 @@ import java.util.ArrayList;
  */
 public class CardDatabase {
 
-    private ArrayList<WhiteCard> whiteCards;
-    private ArrayList<BlackCard> blackCards;
+    private static ArrayList<WhiteCard> whiteCards;
+    private static ArrayList<BlackCard> blackCards;
 
-    public static void main(String[] args) {
+    private static final String cardDatabaseFile = "cards.json";
+    private static final String whiteCardsKey = "whiteCards";
+    private static final String blackCardsKey = "blackCards";
+
+    public static void parseCards() {
+        whiteCards = new ArrayList<>();
+        blackCards = new ArrayList<>();
+
         JSONParser parser = new JSONParser();
 
         try {
-            JSONObject json = (JSONObject) parser.parse(new FileReader("cards.json"));
+            JSONObject json = (JSONObject) parser.parse(new FileReader(cardDatabaseFile));
 
-            JSONArray whiteCards = (JSONArray) json.get("whiteCards");
-            JSONArray blackCards = (JSONArray) json.get("blackCards");
+            JSONArray whiteArray = (JSONArray) json.get(whiteCardsKey);
+            JSONArray blackArray = (JSONArray) json.get(blackCardsKey);
+
+//            System.out.println(whiteArray);
+
+            for (String cardText : (Iterable<String>) whiteArray) {
+                whiteCards.add(new WhiteCard(cardText, null));
+            }
+
+            for (JSONObject card : (Iterable<JSONObject>) blackArray) {
+                blackCards.add(new BlackCard((String) card.get("text"), ((Long) card.get("pick")).intValue()));
+            }
 
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        parseCards();
+        System.out.println(whiteCards);
+        System.out.println(blackCards);
     }
 
 }
