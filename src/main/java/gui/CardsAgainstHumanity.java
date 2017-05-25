@@ -1,5 +1,6 @@
 package gui;
 
+import logic.Card;
 import logic.login.LoginClient;
 
 import java.awt.*;
@@ -26,16 +27,17 @@ public class CardsAgainstHumanity extends JFrame{
     private JButton joinRoom;
     private JButton refresh;
 
-    private LoginClient client;
+    private static CardsAgainstHumanity instance = null;
 
+    public static CardsAgainstHumanity getInstance() {
+        return instance;
+    }
 
     public static void main(String[] args){
         new CardsAgainstHumanity();
     }
 
     public CardsAgainstHumanity(){
-        this.client = new LoginClient();
-
         this.setSize(900,550);
 
         Toolkit tk = Toolkit.getDefaultToolkit();
@@ -141,6 +143,10 @@ public class CardsAgainstHumanity extends JFrame{
         this.setContentPane(newPanel);
         this.validate();
         this.repaint();
+    }
+
+    public void refreshRooms() {
+        //TODO:
     }
 
 }
