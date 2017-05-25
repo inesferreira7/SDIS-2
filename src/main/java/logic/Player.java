@@ -5,12 +5,12 @@ import java.util.ArrayList;
 public class Player{
 
     String name;
-    ArrayList cards;
+    ArrayList<WhiteCard> cards;
     int points;
 
-    public Player(String name, ArrayList cards, int points){
+    public Player(String name, int points){
+        cards  = new ArrayList<>();
         this.name=name;
-        this.cards=cards;
         this.points=points;
     }
 
@@ -26,16 +26,20 @@ public class Player{
         return cards;
     }
 
-    public void setCards(ArrayList cards) {
-        this.cards = cards;
+    public void addCard(WhiteCard card) {
+        cards.add(card);
     }
 
     public int getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
+    public void addPoints(int points) {
+        this.points =+ points;
+    }
+
+    public void removeCard(WhiteCard card){
+        cards.remove(card);
     }
 }
 

@@ -1,7 +1,5 @@
 package logic;
 
-import java.util.ArrayList;
-
 /**
  * Created by up201404990 on 25-05-2017.
  */
