@@ -11,4 +11,8 @@ public class WhiteCard extends Card{
         super(text);
         this.owner = p;
     }
+
+    public Player getOwner(){
+        return owner;
+    }
 }
