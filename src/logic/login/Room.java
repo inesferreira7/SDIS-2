@@ -1,3 +1,5 @@
+package logic.login;
+
 public class Room{
 
     String id;
