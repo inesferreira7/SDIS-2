@@ -2,9 +2,11 @@ var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
+var MAX_NUM_PLAYERS = 6;
+var MIN_NUM_PLAYERS = 3;
 var rooms = {};
 
-port = (process.env.PORT || 8001);
+var port = (process.env.PORT || 8001);
 
 server.listen(port, function(){
   //console.log("Server is now running...");
@@ -20,6 +22,8 @@ server.listen(port, function(){
 io.on('connection', function(socket){
   socket.emit('getRooms', rooms);
   socket.on('room', function(arg){
+    if(!isJoinable(arg.room))
+      return; //TODO: edit, send message to reload
     socket.join(arg.room);
     if(socket.room){
       leaveRoom(socket.room, socket.name);
@@ -27,19 +31,15 @@ io.on('connection', function(socket){
     }
     socket.room = arg.room;
     socket.name = arg.name;
+    var playerIp = socket.request.connection.remoteAddress;
+    var newPlayer = new player(socket.id, socket.name, -1, playerIp);
+    socket.emit('youAre', newPlayer);
     if(!(socket.room in rooms))
       rooms[socket.room] = new room(socket.room);
     socket.join(socket.room);
-    var newPlayer = new player(socket.id, socket.name, rooms[socket.room].players.length);
     rooms[socket.room].players.push(newPlayer);
     // console.log(socket.handshake.address.address);
-    // console.log(socket.request.connection.remoteAddress);
     // console.log(socket.request.connection.remotePort);
-    // if(rooms.room.gameStarted || rooms.room.playerIndex == 9)
-      // socket.disconnect('unauthorized');
-    // else if (!socket.room.gameEnded){
-    console.log(rooms);
-      console.log("Player Connected!");
       socket.emit('getPlayers', rooms[socket.room].players); // sendds
       // players.push(new player(socket.id, playerIndex++));
       // socket.emit('idAndPosition', { id : socket.id, position : playerIndex - 1});
@@ -47,12 +47,11 @@ io.on('connection', function(socket){
       socket.on('disconnect', function(){
         console.log("Disconnected");
         io.to(socket.room).emit('playerDisconnected', socket.id);
-        leaveRoom(socket.room, socket.name);
-        //TODO: disconnectUser();
+//        disconnectUser(socket.room, socket.id);
+        leaveRoom(socket.room, socket.id);
+
       //  console.log("Player Disconnected!");
-        // for(var i = 0; i < players.length; i++){
-        //   if(players[i].id == socket.id){
-        //     socket.broadcast.emit('playerDisconnected', { position : players[i].position});
+//             socket.broadcast.emit('playerDisconnected', { position : players[i].position});
         //     if(gameStarted){
         //       rooms[socket.room].players[i].playing = false;
         //       noActivePlayers--;
@@ -84,9 +83,17 @@ io.on('connection', function(socket){
       //   }
       // });
       socket.on('gameStarted', function(){
+
         //console.log("Game Started " + socket.id);
-        rooms.room.gameStarted = true;
-        // socket.emit('setPlayers', { players : players });
+        if(rooms[socket.room].players.length < MIN_NUM_PLAYERS)
+            return;
+            
+        rooms[socket.room].gameStarted = true;
+
+        for(var i = 0; i < rooms[socket.room].players.length; i++) {
+            rooms[socket.room].players[i].position = i;
+        }
+        io.to(socket.room).emit('setPlayers', { players : rooms[socket.room].players });
         // socket.broadcast.emit('setPlayers', { players : players });
         // noActivePlayers = players.length;
       });
@@ -96,13 +103,22 @@ io.on('connection', function(socket){
 
 
 
+function disconnectUser(roomId, playerId) { //TODO: IF Game started....
+    var room = rooms[roomId];
+    for(var i = 0; i < room.players.length; i++){
+        if(room.players[i].id == playerId)
+            return players.splice(i, 1)[0];
+    }
+}
 
-
-function player(id, name, position){
+function player(id, name, position, ip){
   this.id = id;
   this.name = name;
   this.position = position;
   this.active = true;
+
+  //connection
+  this.ip = ip;
 }
 
 function room(id) {
@@ -115,13 +131,23 @@ function room(id) {
   this.gameEnded = false;
 }
 
-function leaveRoom(id, playerName) {
+function leaveRoom(id, playerId) {
   var room = rooms[id];
   
-  for(i = 0; i < room.players.length; i++)
-    if(room.players[i].name == playerName) room.players.splice(i, 1);
-    
-  //TODO: DELETE ROOM IF EMPTY
+  for(var i = 0; i < room.players.length; i++)
+    if(room.players[i].id == playerId) room.players.splice(i, 1);
+
+   if(room.players.length == 0)
+     delete rooms[id];
+  //TODO: test DELETE ROOM IF EMPTY
+}
+
+function isJoinable(roomId) {
+  var room = rooms[roomId];
+  if(room)
+    return !room.gameStarted && !room.gameEnded && room.players.length < MAX_NUM_PLAYERS; //TODO: Check if player should be in game
+   else
+    return true;
 }
 
 function fixPlayerPositions(){
