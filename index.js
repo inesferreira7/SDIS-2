@@ -20,6 +20,9 @@ server.listen(port, function(){
 
 
 io.on('connection', function(socket){
+  socket.on('getRooms', function(){
+      socket.emit('getRooms', rooms);
+  })
   socket.emit('getRooms', rooms);
   socket.on('room', function(arg){
     if(!isJoinable(arg.room))
@@ -49,39 +52,7 @@ io.on('connection', function(socket){
         io.to(socket.room).emit('playerDisconnected', socket.id);
 //        disconnectUser(socket.room, socket.id);
         leaveRoom(socket.room, socket.id);
-
-      //  console.log("Player Disconnected!");
-//             socket.broadcast.emit('playerDisconnected', { position : players[i].position});
-        //     if(gameStarted){
-        //       rooms[socket.room].players[i].playing = false;
-        //       noActivePlayers--;
-        //       if(noActivePlayers == 0){
-        //         playerIndex = 0;
-        //         players = [];
-        //         noActivePlayers=0;
-        // 
-        //         gameStarted = true;
-        //         gameEnded = true;
-        //       }
-        //     }
-        //     else {
-        //       players.splice(i, 1);
-        //       playerIndex--;
-        //       fixPlayerPositions();
-        //     }
-        //   }
-        // }
-        //console.log(players);
       });
-      // socket.on('playerName', function(name){
-      //   for(var i = 0; i < players.length; i++){
-      //     if(players[i].id == socket.id){
-      //       players[i].name = name;
-      //       socket.broadcast.emit('newPlayer', { id : socket.id, name : players[i].name, position: players[i].position});
-      //       //console.log(players);
-      //     }
-      //   }
-      // });
       socket.on('gameStarted', function(){
 
         //console.log("Game Started " + socket.id);

@@ -17,23 +17,21 @@ import java.util.Iterator;
  */
 public class LoginClient {
 
-    public ArrayList<Room> rooms;
+    private ArrayList<Room> rooms;
     private Socket socket;
     private Player me;
     private Room myRoom;
 
-    public static void main(String[] args){
-
-        LoginClient rooms = new LoginClient();
-        rooms.connectSocket();
-        rooms.configSocketEvents();
+    public LoginClient() {
+        connectSocket();
+        configSocketEvents();
     }
 
     public void connectSocket() {
         String ip = "https://sdis-cardsagainsthumanity.herokuapp.com";
 //        String ip = "http://localhost:8001";
         try {
-            myRoom = new Room("rooma");
+//            myRoom = new Room("rooma");
             socket = IO.socket(ip);
             socket.connect();
 //            Thread.sleep(2000);
@@ -129,5 +127,17 @@ public class LoginClient {
                 }
             }
         });
+    }
+
+    public void getRooms() {
+        socket.emit("getRooms");
+    }
+
+
+    public static void main(String[] args){
+
+        LoginClient rooms = new LoginClient();
+        rooms.connectSocket();
+        rooms.configSocketEvents();
     }
 }
