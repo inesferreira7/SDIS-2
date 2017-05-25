@@ -36,16 +36,12 @@ public class LoginClient {
             myRoom = new Room("rooma");
             socket = IO.socket(ip);
             socket.connect();
-            Thread.sleep(2000);
-            JSONObject join = new JSONObject();
-            join.put("room", "rooma");
-            join.put("name", "testname");
-            socket.emit("room", join);
+//            Thread.sleep(2000);
+//            JSONObject join = new JSONObject();
+//            join.put("room", "rooma");
+//            join.put("name", "testname");
+//            socket.emit("room", join);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
