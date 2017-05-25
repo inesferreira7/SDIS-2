@@ -1,5 +1,6 @@
 package logic.login;
 
+import gui.CardsAgainstHumanity;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -17,17 +18,17 @@ import java.util.Iterator;
  */
 public class LoginClient {
 
-    private ArrayList<Room> rooms;
-    private Socket socket;
-    private Player me;
-    private Room myRoom;
+    private static ArrayList<Room> rooms;
+    private static Socket socket;
+    private static Player me;
+    private static Room myRoom;
 
-    public LoginClient() {
+    public static void initClient() {
         connectSocket();
         configSocketEvents();
     }
 
-    public void connectSocket() {
+    public static void connectSocket() {
         String ip = "https://sdis-cardsagainsthumanity.herokuapp.com";
 //        String ip = "http://localhost:8001";
         try {
@@ -44,7 +45,7 @@ public class LoginClient {
         }
     }
 
-    public void configSocketEvents() {
+    public static void configSocketEvents() {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -68,6 +69,8 @@ public class LoginClient {
                     }
                 } catch (JSONException ignored) {
                 }
+
+                CardsAgainstHumanity.getInstance().refreshRooms();
 
             }
         }).on("youAre", new Emitter.Listener() {
@@ -129,7 +132,7 @@ public class LoginClient {
         });
     }
 
-    public void getRooms() {
+    public static void getRooms() {
         socket.emit("getRooms");
     }
 
