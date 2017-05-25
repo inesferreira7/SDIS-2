@@ -1,8 +1,8 @@
 package logic.login;
 
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,11 +38,11 @@ public class LoginClient {
 
     public void configSocketEvents() {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-            @Override
+//            @Override
             public void call(Object... args) {
             }
         }).on("getRooms", new Emitter.Listener() {
-            @Override
+//            @Override
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
                 try {
