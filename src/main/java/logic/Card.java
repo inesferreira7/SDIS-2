@@ -10,4 +10,11 @@ public class Card {
     public Card(String text) {
         this.text = text;
     }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "text='" + text + '\'' +
+                '}';
+    }
 }
