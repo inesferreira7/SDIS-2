@@ -6,15 +6,9 @@ package logic;
 public class BlackCard extends Card{
 
     private int pick;
-    private int whiteSpaces;
 
-    public BlackCard(String text, int pick, int whiteSpaces) {
+    public BlackCard(String text, int pick) {
         super(text);
         this.pick = pick;
-        this.whiteSpaces = whiteSpaces;
-    }
-
-    public int getWhiteSpaces(){
-        return whiteSpaces;
     }
 }

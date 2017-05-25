@@ -4,14 +4,28 @@ import java.util.ArrayList;
 
 public class Player{
 
-    String name;
-    ArrayList<WhiteCard> cards;
-    int points;
+    private String id;
+    private String name;
+    private ArrayList<WhiteCard> cards;
+    private int position;
+    private int points;
+//    Socket
 
-    public Player(String name, int points){
-        cards  = new ArrayList<>();
+    public Player(String id, String name){
+        this.id=id;
         this.name=name;
-        this.points=points;
+
+        this.points=0;
+        this.position=-1;
+        this.cards=new ArrayList<>();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -40,6 +54,16 @@ public class Player{
 
     public void removeCard(WhiteCard card){
         cards.remove(card);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Player player = (Player) o;
+
+        return id.equals(player.id);
     }
 }
 
