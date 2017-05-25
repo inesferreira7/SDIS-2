@@ -14,15 +14,17 @@ import java.io.IOException;
  */
 public class CardsAgainstHumanity extends JFrame{
 
-    JButton button1;
-    JTextField textField1;
-    JPanel leftPanel;
-    JPanel rightPanel;
-    JPanel leftRoomPanel;
-    JPanel rightRoomPanel;
-    JButton createRoom;
-    JButton joinRoom;
-    JButton refresh;
+    private JButton button1;
+    private JTextField textField1;
+    private JPanel leftPanel;
+    private JPanel rightPanel;
+    private JPanel leftRoomPanel;
+    private JPanel rightRoomPanel;
+    private JButton createRoom;
+    private JButton joinRoom;
+    private JButton refresh;
+
+    private LoginClient client;
 
 
     public static void main(String[] args){
@@ -30,6 +32,8 @@ public class CardsAgainstHumanity extends JFrame{
     }
 
     public CardsAgainstHumanity(){
+        this.client = new LoginClient();
+
         this.setSize(900,550);
 
         Toolkit tk = Toolkit.getDefaultToolkit();
