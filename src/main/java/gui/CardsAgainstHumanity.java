@@ -1,5 +1,6 @@
 package gui;
 
+import com.sun.scenario.effect.impl.sw.java.JSWBlend_COLOR_BURNPeer;
 import logic.Card;
 import logic.login.LoginClient;
 import logic.login.Room;
@@ -7,6 +8,7 @@ import logic.login.Room;
 import java.awt.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -28,6 +30,7 @@ public class CardsAgainstHumanity extends JFrame{
     private JButton createRoom;
     private JButton joinRoom;
     private JButton refresh;
+    private JButton startGame;
     private JList displayRooms;
     private String clientName;
 
@@ -125,26 +128,48 @@ public class CardsAgainstHumanity extends JFrame{
 
         JPanel roomPanel = new JPanel(new BorderLayout());
 
-        rightRoomPanel = new JPanel(new BorderLayout());
+        rightRoomPanel = new JPanel(new GridLayout(7, 3, 0, 50));
         rightRoomPanel.setBackground(Color.black);
         leftRoomPanel = new JPanel();
         leftRoomPanel.setBackground(Color.black);
-        rightRoomPanel.setLayout(new BoxLayout(rightRoomPanel,BoxLayout.Y_AXIS));
+        leftRoomPanel.setLayout(new BoxLayout(leftRoomPanel,BoxLayout.X_AXIS));
 
         roomPanel.add(leftRoomPanel);
         roomPanel.add(rightRoomPanel, BorderLayout.EAST);
+
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
 
 
         createRoom = new JButton("Create Room");
         joinRoom = new JButton("Join Room");
         refresh = new JButton("Refresh");
+        startGame = new JButton("Start Game");
 
-        rightRoomPanel.add(Box.createRigidArea(new Dimension(0,150)));
-        rightRoomPanel.add(createRoom);
-        rightRoomPanel.add(Box.createRigidArea(new Dimension(0,80)));
-        rightRoomPanel.add(joinRoom);
-        rightRoomPanel.add(Box.createRigidArea(new Dimension(0,80)));
+        //rightRoomPanel.add(Box.createRigidArea(new Dimension(0,150)));
         rightRoomPanel.add(refresh);
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
+        //rightRoomPanel.add(Box.createRigidArea(new Dimension(0,80)));
+        rightRoomPanel.add(createRoom);
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
+        //rightRoomPanel.add(Box.createRigidArea(new Dimension(0,80)));
+        rightRoomPanel.add(joinRoom);
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(startGame);
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
+
+        leftRoomPanel.add(Box.createRigidArea(new Dimension(100,900)));
 
         button1.addActionListener(new ActionListener() {
             @Override
@@ -205,6 +230,8 @@ public class CardsAgainstHumanity extends JFrame{
         if(listScroller != null)
             leftRoomPanel.remove(listScroller);
         listScroller = new JScrollPane(displayRooms);
+        listScroller.setMaximumSize(new Dimension(250,300));
+        listScroller.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         leftRoomPanel.add(listScroller);
         this.validate();
