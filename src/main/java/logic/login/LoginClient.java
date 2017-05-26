@@ -72,15 +72,20 @@ public class LoginClient {
                         int numberPlayers = players.length();
                         boolean gameStarted = newRoom.getBoolean("gameStarted");
                         boolean gameEnded = newRoom.getBoolean("gameEnded");
-//                        System.out.println(temp);
-                        rooms.add(new Room(id,numberPlayers,gameStarted,gameEnded));
+
+                        Room temp = new Room(id,numberPlayers,gameStarted,gameEnded);
+                        if(temp.getId().equals(myRoom))
+                            temp.setPlayers(players);
+                        rooms.add(temp);
 //                        System.out.println(rooms.size());
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                CardsAgainstHumanity.getInstance().refreshRooms();
+                System.out.println(rooms);
+                if(CardsAgainstHumanity.isInstanciated())
+                    CardsAgainstHumanity.getInstance().refreshRooms();
 
             }
         }).on("youAre", new Emitter.Listener() {
@@ -182,5 +187,9 @@ public class LoginClient {
         socket.emit("room", json);
         socket.emit("getRooms");
 
+    }
+
+    public Player getMe() {
+        return me;
     }
 }

@@ -11,6 +11,7 @@ public class GameLogic {
     /*test variables*/
 
     Board board;
+    public static final int MIN_NUM_PLAYERS = 3, MAX_NUM_PLAYERS = 6;
     public static final int PLAYERS_PICKING = 0, PICK_WINNER = 1, END_ROUND = 2;
     public static int gameState;
     public static final int WHITECARDS_PER_PLAYER = 5;

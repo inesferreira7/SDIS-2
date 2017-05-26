@@ -1,6 +1,9 @@
 package logic.login;
 
 import logic.Player;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -54,6 +57,25 @@ public class Room{
 
     public void setGameEnded(boolean gameEnded) {
         this.gameEnded = gameEnded;
+    }
+
+    public void setPlayers(JSONArray playersArray) {
+        for(int i = 0; i < playersArray.length(); i++){
+            try {
+                JSONObject player = (JSONObject) (playersArray.get(i));
+                String id = player.getString("id");
+                String name = player.getString("name");
+
+                players.add(new Player(id, name));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Player getOwner() {
+        if(this.players == null || this.players.isEmpty()) return null;
+        return this.players.get(0);
     }
 
     public void addPlayer(Player p) {

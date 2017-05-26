@@ -1,5 +1,7 @@
 package gui;
 
+
+import logic.GameLogic;
 import logic.login.LoginClient;
 import logic.login.Room;
 
@@ -8,10 +10,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by ines on 25-05-2017.
@@ -46,6 +51,10 @@ public class CardsAgainstHumanity extends JFrame{
         if(instance == null)
             instance = new CardsAgainstHumanity();
         return instance;
+    }
+
+    public static boolean isInstanciated() {
+        return instance != null;
     }
 
     public static void main(String[] args){
@@ -116,9 +125,7 @@ public class CardsAgainstHumanity extends JFrame{
         leftPanel.add(picLabel, BorderLayout.CENTER);
 
         this.add(thePanel);
-
         this.setVisible(true);
-
         textField1.requestFocus();
 
         //ENTER ROOM MENU
@@ -166,6 +173,8 @@ public class CardsAgainstHumanity extends JFrame{
         rightRoomPanel.add(new JLabel(""));
         rightRoomPanel.add(new JLabel(""));
 
+        startGame.setVisible(false);
+
         leftRoomPanel.add(Box.createRigidArea(new Dimension(100,900)));
 
         button1.addActionListener(new ActionListener() {
@@ -204,7 +213,7 @@ public class CardsAgainstHumanity extends JFrame{
                 }
                 String temp = displayRooms.getSelectedValue().toString();
                 String[] splited = temp.split(" ");
-                String roomName = splited[1];
+                String roomName = String.join(" ", Arrays.copyOfRange(splited, 0, splited.length-1)); // join everything but the last part of the string - the X/MAX part
                 client.joinRoom(clientName, roomName);
             }
         });
@@ -213,6 +222,7 @@ public class CardsAgainstHumanity extends JFrame{
     public void changePanel(JPanel oldPanel, JPanel newPanel){
         this.remove(oldPanel);
         this.setContentPane(newPanel);
+        this.refreshRooms();
         this.validate();
         this.repaint();
     }
@@ -224,6 +234,19 @@ public class CardsAgainstHumanity extends JFrame{
         createData(this.rooms);
 
         displayRooms = new JList(roomList);
+        displayRooms.setFont( displayRooms.getFont().deriveFont(Font.PLAIN) );
+        displayRooms.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList)evt.getSource();
+                if (evt.getClickCount() >= 2) {
+
+                    // Double-click detected
+                    int index = list.locationToIndex(evt.getPoint());
+                    client.joinRoom(clientName, rooms.get(index).getId());
+                }
+            }
+        });
+
         if(listScroller != null)
             leftRoomPanel.remove(listScroller);
         listScroller = new JScrollPane(displayRooms);
@@ -232,6 +255,12 @@ public class CardsAgainstHumanity extends JFrame{
         listScroller.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         leftRoomPanel.add(listScroller);
+
+        if(client.getMyRoom() != null && client.getMe().equals(client.getMyRoom().getOwner())
+                && client.getMyRoom().getNumPlayers() >= GameLogic.MIN_NUM_PLAYERS)
+            startGame.setVisible(true);
+        else
+            startGame.setVisible(false);
         this.validate();
         this.repaint();
     }
@@ -239,8 +268,10 @@ public class CardsAgainstHumanity extends JFrame{
     public String[] createData(ArrayList<Room> rooms){
 
         for(int i = 0; i < rooms.size(); i++){
-            System.out.println(i);
-            roomList[i] = "Room: " + rooms.get(i).getId() + " " + rooms.get(i).getNumPlayers() + "/6";
+            String text = rooms.get(i).getId() + " " + rooms.get(i).getNumPlayers() + "/" + GameLogic.MAX_NUM_PLAYERS;
+            if(rooms.get(i).equals(client.getMyRoom()))
+                text = "<html><b>" + text + "</b></html>";
+            roomList[i] = text;
         }
 //        System.out.println(roomList[0]);
         return roomList;
