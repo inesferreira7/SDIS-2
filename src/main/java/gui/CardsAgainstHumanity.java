@@ -2,6 +2,7 @@ package gui;
 
 import logic.Card;
 import logic.login.LoginClient;
+import logic.login.Room;
 
 import java.awt.*;
 import javax.imageio.ImageIO;
@@ -11,6 +12,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by ines on 25-05-2017.
@@ -26,8 +28,17 @@ public class CardsAgainstHumanity extends JFrame{
     private JButton createRoom;
     private JButton joinRoom;
     private JButton refresh;
+    private JList displayRooms;
+    private String clientName;
+
+    JScrollPane listScroller;
+
 
     private LoginClient client;
+
+    private ArrayList<Room> rooms;
+
+    private String[] roomList;
 
     private static CardsAgainstHumanity instance = null;
 
@@ -43,6 +54,8 @@ public class CardsAgainstHumanity extends JFrame{
 
     private CardsAgainstHumanity(){
         this.client = new LoginClient();
+
+
 
         this.setSize(900,550);
 
@@ -133,11 +146,14 @@ public class CardsAgainstHumanity extends JFrame{
         rightRoomPanel.add(Box.createRigidArea(new Dimension(0,80)));
         rightRoomPanel.add(refresh);
 
-
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-//                System.out.print("OI");
+                if(textField1.getText().isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Insert valid name");
+                    return;
+                }
+                clientName = textField1.getText();
                 changePanel(thePanel,roomPanel);
             }
         });
@@ -149,6 +165,13 @@ public class CardsAgainstHumanity extends JFrame{
             }
         });
 
+        createRoom.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                String roomName = JOptionPane.showInputDialog(null,"Room name");
+                client.joinRoom(clientName, roomName);
+            }
+        });
     }
 
     public void changePanel(JPanel oldPanel, JPanel newPanel){
@@ -159,8 +182,29 @@ public class CardsAgainstHumanity extends JFrame{
     }
 
     public void refreshRooms() {
-        //TODO:
-        System.out.println(client.getRooms());
+        this.rooms = client.getRooms();
+        System.out.println("rooms:" + rooms);
+        roomList = new String[rooms.size()];
+        createData(this.rooms);
+
+        displayRooms = new JList(roomList);
+        if(listScroller != null)
+            leftRoomPanel.remove(listScroller);
+        listScroller = new JScrollPane(displayRooms);
+
+        leftRoomPanel.add(listScroller);
+        this.validate();
+        this.repaint();
+    }
+
+    public String[] createData(ArrayList<Room> rooms){
+
+        for(int i = 0; i < rooms.size(); i++){
+            System.out.println(i);
+            roomList[i] = "Room: " + rooms.get(i).getId() + " " + rooms.get(i).getNumPlayers() + "/6";
+        }
+//        System.out.println(roomList[0]);
+        return roomList;
     }
 
 }

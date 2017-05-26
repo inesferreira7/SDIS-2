@@ -22,7 +22,7 @@ public class LoginClient {
     private ArrayList<Room> rooms;
     private Socket socket;
     private Player me;
-    private Room myRoom;
+    private String myRoom;
 
     public LoginClient() {
         rooms = new ArrayList<>();
@@ -106,7 +106,7 @@ public class LoginClient {
                     for(int i = 0; i < data.length(); i++) {
                         String id = (String) ((JSONObject) data.get(i)).get("id");
                         String name = (String) ((JSONObject) data.get(i)).get("name");
-                        myRoom.addPlayer(new Player(id, name));
+                        getMyRoom().addPlayer(new Player(id, name));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -121,7 +121,7 @@ public class LoginClient {
                     String id = (String) data.get("id");
                     String name = (String) data.get("name");
 
-                    myRoom.addPlayer(new Player(id, name));
+                    getMyRoom().addPlayer(new Player(id, name));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -134,7 +134,7 @@ public class LoginClient {
                 try {
                     String id = (String) data.get("id");
 
-                    myRoom.removePlayer(new Player(id, ""));
+                    getMyRoom().removePlayer(new Player(id, ""));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -150,10 +150,40 @@ public class LoginClient {
         return rooms;
     }
 
+    public Room getMyRoom(){
+        for (Room r:
+             rooms) {
+            if(r.getId().equals(myRoom))
+                return r;
+        }
+        return null;
+    }
+
     public static void main(String[] args){
 
         LoginClient rooms = new LoginClient();
         rooms.connectSocket();
         rooms.configSocketEvents();
+    }
+
+    public void joinRoom(String name, String roomName){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("name", name);
+            json.put("room", roomName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        myRoom = roomName;
+
+        Room newRoom = new Room(roomName);
+        if(!rooms.contains(newRoom)){
+            rooms.add(newRoom);
+        }
+
+        socket.emit("room", json);
+        socket.emit("getRooms");
+
     }
 }
