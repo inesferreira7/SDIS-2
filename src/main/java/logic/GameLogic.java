@@ -27,7 +27,7 @@ public class GameLogic {
         board.dealWhiteCards(WHITECARDS_PER_PLAYER);
 
         if(gameState == PLAYERS_PICKING){
-            for(int i = 0; i < board.players.size(); i++){
+            for(int i = 0; i < board.getPlayers().size(); i++){
                 playerPickedCard(player ,wCard);
             }
         }

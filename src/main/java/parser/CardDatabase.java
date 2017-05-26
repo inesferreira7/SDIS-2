@@ -35,7 +35,7 @@ public class CardDatabase {
             JSONArray whiteArray = (JSONArray) json.get(whiteCardsKey);
             JSONArray blackArray = (JSONArray) json.get(blackCardsKey);
 
-//            System.out.println(whiteArray);
+//           System.out.println(whiteArray);
 
             for (String cardText : (Iterable<String>) whiteArray) {
                 whiteCards.add(new WhiteCard(cardText, null));
@@ -56,4 +56,11 @@ public class CardDatabase {
         System.out.println(blackCards);
     }
 
+    public static ArrayList<WhiteCard> getWhiteCards() {
+        return whiteCards;
+    }
+
+    public static ArrayList<BlackCard> getBlackCards() {
+        return blackCards;
+    }
 }
