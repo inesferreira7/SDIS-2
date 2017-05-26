@@ -226,6 +226,7 @@ public class CardsAgainstHumanity extends JFrame{
         createData(this.rooms);
 
         displayRooms = new JList(roomList);
+        displayRooms.setFont( displayRooms.getFont().deriveFont(Font.PLAIN) );
         if(listScroller != null)
             leftRoomPanel.remove(listScroller);
         listScroller = new JScrollPane(displayRooms);
@@ -240,8 +241,10 @@ public class CardsAgainstHumanity extends JFrame{
     public String[] createData(ArrayList<Room> rooms){
 
         for(int i = 0; i < rooms.size(); i++){
-            System.out.println(i);
-            roomList[i] = "Room: " + rooms.get(i).getId() + " " + rooms.get(i).getNumPlayers() + "/6";
+            String text = rooms.get(i).getId() + " " + rooms.get(i).getNumPlayers() + "/6";
+            if(rooms.get(i).equals(client.getMyRoom()))
+                text = "<html><b>" + text + "</b></html>";
+            roomList[i] = text;
         }
 //        System.out.println(roomList[0]);
         return roomList;
