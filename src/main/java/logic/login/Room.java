@@ -60,13 +60,27 @@ public class Room{
     }
 
     public void setPlayers(JSONArray playersArray) {
+        setPlayers(playersArray, false);
+    }
+
+    public void setPlayers(JSONArray playersArray, boolean detailed) {
         for(int i = 0; i < playersArray.length(); i++){
             try {
                 JSONObject player = (JSONObject) (playersArray.get(i));
                 String id = player.getString("id");
                 String name = player.getString("name");
 
-                players.add(new Player(id, name));
+                Player p = new Player(id, name);
+
+                if(detailed){
+                    int position = player.getInt("position");
+                    String ip = player.getString("ip");
+
+                    p.setPosition(position);
+                    p.createSocket(ip);
+                }
+
+                players.add(p);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

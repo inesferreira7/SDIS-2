@@ -182,6 +182,13 @@ public class CardsAgainstHumanity extends JFrame{
 
         startGame.setVisible(false);
 
+        startGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                client.sendStartGame();
+            }
+        });
+
         leftRoomPanel.add(Box.createRigidArea(new Dimension(100,900)));
 
         button1.addActionListener(new ActionListener() {
@@ -234,7 +241,6 @@ public class CardsAgainstHumanity extends JFrame{
 
     public void refreshRooms() {
         this.rooms = client.getRooms();
-        System.out.println("rooms:" + rooms);
         roomList = new String[rooms.size()];
         createData(this.rooms);
 
@@ -278,7 +284,6 @@ public class CardsAgainstHumanity extends JFrame{
                 text = "<html><b>" + text + "</b></html>";
             roomList[i] = text;
         }
-//        System.out.println(roomList[0]);
         return roomList;
     }
 

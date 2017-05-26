@@ -19,6 +19,8 @@ import java.util.Iterator;
  */
 public class LoginClient {
 
+    private final String myIP = "172.30.27.172";
+
     private ArrayList<Room> rooms;
     private Socket socket;
     private Player me;
@@ -60,12 +62,8 @@ public class LoginClient {
                     Iterator<String> keys = data.keys();
                     rooms = new ArrayList<Room>();
                     while(keys.hasNext()){
-//                        System.out.println("here");
                         String key = keys.next();
-//                        System.out.println(key);
                         JSONObject newRoom = (JSONObject)data.get(key);
-//                        System.out.println(newRoom);
-//                        System.out.println(newRoom);
                         String id = newRoom.getString("id");
                         JSONArray players = newRoom.getJSONArray("players");
 
@@ -77,13 +75,10 @@ public class LoginClient {
                         if(temp.getId().equals(myRoom))
                             temp.setPlayers(players);
                         rooms.add(temp);
-//                        System.out.println(rooms.size());
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                System.out.println(rooms);
                 if(CardsAgainstHumanity.isInstanciated())
                     CardsAgainstHumanity.getInstance().refreshRooms();
 
@@ -144,7 +139,18 @@ public class LoginClient {
                     e.printStackTrace();
                 }
             }
+        }).on("setPlayers", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+                JSONArray data = (JSONArray) objects[0];
+
+                getMyRoom().setPlayers(data, true);
+            }
         });
+    }
+
+    public void sendStartGame() {
+        socket.emit("startGame");
     }
 
     public void sendGetRooms() {
@@ -176,6 +182,7 @@ public class LoginClient {
         try {
             json.put("name", name);
             json.put("room", roomName);
+            json.put("ip", myIP);
         } catch (JSONException e) {
             e.printStackTrace();
         }

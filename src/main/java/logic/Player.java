@@ -1,15 +1,19 @@
 package logic;
 
+import java.io.IOException;
+import java.net.*;
 import java.util.ArrayList;
 
 public class Player{
+
+    private final int SOCKET_PORT = 4123;
 
     private String id;
     private String name;
     private ArrayList<WhiteCard> cards;
     private int position;
     private int points;
-//    Socket
+    private DatagramSocket socket;
 
     public Player(String id, String name){
         this.id=id;
@@ -18,6 +22,18 @@ public class Player{
         this.points=0;
         this.position=-1;
         this.cards=new ArrayList<>();
+    }
+
+    public void createSocket(String address) {
+        try {
+            socket = new DatagramSocket(SOCKET_PORT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public String getId() {

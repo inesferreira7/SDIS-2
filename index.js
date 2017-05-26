@@ -27,16 +27,16 @@ io.on('connection', function(socket){
   socket.on('room', function(arg){
     if(!isJoinable(arg.room))
       return; //TODO: edit, send message to reload
-    socket.join(arg.room);
     if(socket.room){
       console.log("leaving room");
       socket.leave(socket.room); 
       leaveRoom(socket.room, socket.id);
     }
+    socket.join(arg.room);
     socket.room = arg.room;
     socket.name = arg.name;
     var playerIp = socket.request.connection.remoteAddress;
-    var newPlayer = new player(socket.id, socket.name, -1, playerIp);
+    var newPlayer = new player(socket.id, socket.name, -1, arg.ip);
     socket.emit('youAre', newPlayer);
     if(!(socket.room in rooms))
       rooms[socket.room] = new room(socket.room);
