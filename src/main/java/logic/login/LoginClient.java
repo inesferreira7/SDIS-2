@@ -4,6 +4,7 @@ import gui.CardsAgainstHumanity;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import logic.Card;
 import logic.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,17 +19,18 @@ import java.util.Iterator;
  */
 public class LoginClient {
 
-    private static ArrayList<Room> rooms;
-    private static Socket socket;
-    private static Player me;
-    private static Room myRoom;
+    private ArrayList<Room> rooms;
+    private Socket socket;
+    private Player me;
+    private Room myRoom;
 
-    public static void initClient() {
+    public LoginClient() {
+        rooms = new ArrayList<>();
         connectSocket();
         configSocketEvents();
     }
 
-    public static void connectSocket() {
+    public void connectSocket() {
         String ip = "https://sdis-cardsagainsthumanity.herokuapp.com";
 //        String ip = "http://localhost:8001";
         try {
@@ -45,7 +47,7 @@ public class LoginClient {
         }
     }
 
-    public static void configSocketEvents() {
+    public void configSocketEvents() {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -56,18 +58,26 @@ public class LoginClient {
                 JSONObject data = (JSONObject) args[0];
                 try {
                     Iterator<String> keys = data.keys();
+                    rooms = new ArrayList<Room>();
                     while(keys.hasNext()){
+//                        System.out.println("here");
                         String key = keys.next();
+//                        System.out.println(key);
                         JSONObject newRoom = (JSONObject)data.get(key);
+//                        System.out.println(newRoom);
+//                        System.out.println(newRoom);
                         String id = newRoom.getString("id");
-                        JSONArray players = newRoom.getJSONArray("numPlayers");
+                        JSONArray players = newRoom.getJSONArray("players");
 
                         int numberPlayers = players.length();
                         boolean gameStarted = newRoom.getBoolean("gameStarted");
                         boolean gameEnded = newRoom.getBoolean("gameEnded");
+//                        System.out.println(temp);
                         rooms.add(new Room(id,numberPlayers,gameStarted,gameEnded));
+//                        System.out.println(rooms.size());
                     }
-                } catch (JSONException ignored) {
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
                 CardsAgainstHumanity.getInstance().refreshRooms();
@@ -132,10 +142,13 @@ public class LoginClient {
         });
     }
 
-    public static void getRooms() {
+    public void sendGetRooms() {
         socket.emit("getRooms");
     }
 
+    public ArrayList<Room> getRooms() {
+        return rooms;
+    }
 
     public static void main(String[] args){
 
