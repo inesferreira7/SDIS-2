@@ -83,7 +83,9 @@ public class LoginClient {
                     e.printStackTrace();
                 }
 
-                CardsAgainstHumanity.getInstance().refreshRooms();
+                System.out.println(rooms);
+                if(CardsAgainstHumanity.isInstanciated())
+                    CardsAgainstHumanity.getInstance().refreshRooms();
 
             }
         }).on("youAre", new Emitter.Listener() {

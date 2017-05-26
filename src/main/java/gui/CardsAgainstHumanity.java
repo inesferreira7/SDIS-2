@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by ines on 25-05-2017.
@@ -48,6 +49,10 @@ public class CardsAgainstHumanity extends JFrame{
         if(instance == null)
             instance = new CardsAgainstHumanity();
         return instance;
+    }
+
+    public static boolean isInstanciated() {
+        return instance != null;
     }
 
     public static void main(String[] args){
@@ -118,9 +123,7 @@ public class CardsAgainstHumanity extends JFrame{
         leftPanel.add(picLabel, BorderLayout.CENTER);
 
         this.add(thePanel);
-
         this.setVisible(true);
-
         textField1.requestFocus();
 
         //ENTER ROOM MENU
@@ -168,6 +171,8 @@ public class CardsAgainstHumanity extends JFrame{
         rightRoomPanel.add(new JLabel(""));
         rightRoomPanel.add(new JLabel(""));
 
+        startGame.setVisible(false);
+
         leftRoomPanel.add(Box.createRigidArea(new Dimension(100,900)));
 
         button1.addActionListener(new ActionListener() {
@@ -206,7 +211,7 @@ public class CardsAgainstHumanity extends JFrame{
                 }
                 String temp = displayRooms.getSelectedValue().toString();
                 String[] splited = temp.split(" ");
-                String roomName = splited[1];
+                String roomName = String.join(" ", Arrays.copyOfRange(splited, 0, splited.length-1)); // join everything but the last part of the string - the X/MAX part
                 client.joinRoom(clientName, roomName);
             }
         });
@@ -215,6 +220,7 @@ public class CardsAgainstHumanity extends JFrame{
     public void changePanel(JPanel oldPanel, JPanel newPanel){
         this.remove(oldPanel);
         this.setContentPane(newPanel);
+        this.refreshRooms();
         this.validate();
         this.repaint();
     }
@@ -234,6 +240,11 @@ public class CardsAgainstHumanity extends JFrame{
         listScroller.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         leftRoomPanel.add(listScroller);
+
+        if(client.getMyRoom() != null && client.getMe().equals(client.getMyRoom().getOwner()))
+            startGame.setVisible(true);
+        else
+            startGame.setVisible(false);
         this.validate();
         this.repaint();
     }
