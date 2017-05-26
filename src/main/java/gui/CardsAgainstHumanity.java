@@ -1,15 +1,13 @@
 package gui;
 
-import logic.Card;
 import logic.login.LoginClient;
 import logic.login.Room;
 
-import java.awt.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
-
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -229,6 +227,7 @@ public class CardsAgainstHumanity extends JFrame{
         if(listScroller != null)
             leftRoomPanel.remove(listScroller);
         listScroller = new JScrollPane(displayRooms);
+        listScroller.setBorder(BorderFactory.createTitledBorder("Name: Players"));
         listScroller.setMaximumSize(new Dimension(250,300));
         listScroller.setAlignmentX(Component.CENTER_ALIGNMENT);
 
