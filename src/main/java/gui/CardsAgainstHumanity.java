@@ -1,16 +1,17 @@
 package gui;
 
-import logic.Card;
+
 import logic.GameLogic;
 import logic.login.LoginClient;
 import logic.login.Room;
 
-import java.awt.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
-
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -151,6 +152,13 @@ public class CardsAgainstHumanity extends JFrame{
         refresh = new JButton("Refresh");
         startGame = new JButton("Start Game");
 
+        startGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changePanel(roomPanel, new PlayPanel().getPanel());
+            }
+        });
+
         //rightRoomPanel.add(Box.createRigidArea(new Dimension(0,150)));
         rightRoomPanel.add(refresh);
         rightRoomPanel.add(new JLabel(""));
@@ -249,6 +257,7 @@ public class CardsAgainstHumanity extends JFrame{
         if(listScroller != null)
             leftRoomPanel.remove(listScroller);
         listScroller = new JScrollPane(displayRooms);
+        listScroller.setBorder(BorderFactory.createTitledBorder("Name - Players"));
         listScroller.setMaximumSize(new Dimension(250,300));
         listScroller.setAlignmentX(Component.CENTER_ALIGNMENT);
 
