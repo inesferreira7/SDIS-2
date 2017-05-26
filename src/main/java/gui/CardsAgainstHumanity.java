@@ -27,17 +27,23 @@ public class CardsAgainstHumanity extends JFrame{
     private JButton joinRoom;
     private JButton refresh;
 
+    private LoginClient client;
+
     private static CardsAgainstHumanity instance = null;
 
     public static CardsAgainstHumanity getInstance() {
+        if(instance == null)
+            instance = new CardsAgainstHumanity();
         return instance;
     }
 
     public static void main(String[] args){
-        new CardsAgainstHumanity();
+        CardsAgainstHumanity.getInstance();
     }
 
-    public CardsAgainstHumanity(){
+    private CardsAgainstHumanity(){
+        this.client = new LoginClient();
+
         this.setSize(900,550);
 
         Toolkit tk = Toolkit.getDefaultToolkit();
@@ -131,8 +137,15 @@ public class CardsAgainstHumanity extends JFrame{
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.out.print("OI");
+//                System.out.print("OI");
                 changePanel(thePanel,roomPanel);
+            }
+        });
+
+        refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                client.sendGetRooms();
             }
         });
 
@@ -147,6 +160,7 @@ public class CardsAgainstHumanity extends JFrame{
 
     public void refreshRooms() {
         //TODO:
+        System.out.println(client.getRooms());
     }
 
 }
