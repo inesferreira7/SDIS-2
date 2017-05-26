@@ -1,6 +1,7 @@
 package gui;
 
 import logic.Card;
+import logic.GameLogic;
 import logic.login.LoginClient;
 import logic.login.Room;
 
@@ -233,6 +234,18 @@ public class CardsAgainstHumanity extends JFrame{
 
         displayRooms = new JList(roomList);
         displayRooms.setFont( displayRooms.getFont().deriveFont(Font.PLAIN) );
+        displayRooms.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList)evt.getSource();
+                if (evt.getClickCount() >= 2) {
+
+                    // Double-click detected
+                    int index = list.locationToIndex(evt.getPoint());
+                    client.joinRoom(clientName, rooms.get(index).getId());
+                }
+            }
+        });
+
         if(listScroller != null)
             leftRoomPanel.remove(listScroller);
         listScroller = new JScrollPane(displayRooms);
@@ -241,7 +254,8 @@ public class CardsAgainstHumanity extends JFrame{
 
         leftRoomPanel.add(listScroller);
 
-        if(client.getMyRoom() != null && client.getMe().equals(client.getMyRoom().getOwner()))
+        if(client.getMyRoom() != null && client.getMe().equals(client.getMyRoom().getOwner())
+                && client.getMyRoom().getNumPlayers() >= GameLogic.MIN_NUM_PLAYERS)
             startGame.setVisible(true);
         else
             startGame.setVisible(false);
@@ -252,7 +266,7 @@ public class CardsAgainstHumanity extends JFrame{
     public String[] createData(ArrayList<Room> rooms){
 
         for(int i = 0; i < rooms.size(); i++){
-            String text = rooms.get(i).getId() + " " + rooms.get(i).getNumPlayers() + "/6";
+            String text = rooms.get(i).getId() + " " + rooms.get(i).getNumPlayers() + "/" + GameLogic.MAX_NUM_PLAYERS;
             if(rooms.get(i).equals(client.getMyRoom()))
                 text = "<html><b>" + text + "</b></html>";
             roomList[i] = text;
