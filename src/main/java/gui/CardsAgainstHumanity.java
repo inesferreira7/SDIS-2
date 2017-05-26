@@ -218,10 +218,8 @@ public class CardsAgainstHumanity extends JFrame{
                     JOptionPane.showMessageDialog(null, "Select the room you want to join");
                     return;
                 }
-                String temp = displayRooms.getSelectedValue().toString();
-                String[] splited = temp.split(" ");
-                String roomName = String.join(" ", Arrays.copyOfRange(splited, 0, splited.length-1)); // join everything but the last part of the string - the X/MAX part
-                client.joinRoom(clientName, roomName);
+                int index = displayRooms.getSelectedIndex();
+                client.joinRoom(clientName, rooms.get(index).getId());
             }
         });
     }
