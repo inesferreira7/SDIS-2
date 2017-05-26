@@ -54,7 +54,7 @@ io.on('connection', function(socket){
 //        disconnectUser(socket.room, socket.id);
         leaveRoom(socket.room, socket.id);
       });
-      socket.on('gameStarted', function(){
+      socket.on('startGame', function(){
 
         //console.log("Game Started " + socket.id);
         if(rooms[socket.room].players.length < MIN_NUM_PLAYERS)
@@ -65,7 +65,8 @@ io.on('connection', function(socket){
         for(var i = 0; i < rooms[socket.room].players.length; i++) {
             rooms[socket.room].players[i].position = i;
         }
-        io.to(socket.room).emit('setPlayers', { players : rooms[socket.room].players });
+        console.log("Sending set players..");
+        io.to(socket.room).emit('setPlayers', rooms[socket.room].players);
         // socket.broadcast.emit('setPlayers', { players : players });
         // noActivePlayers = players.length;
       });
