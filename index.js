@@ -29,8 +29,9 @@ io.on('connection', function(socket){
       return; //TODO: edit, send message to reload
     socket.join(arg.room);
     if(socket.room){
-      leaveRoom(socket.room, socket.name);
-      socket.leave(socket.room);
+      console.log("leaving room");
+      socket.leave(socket.room); 
+      leaveRoom(socket.room, socket.id);
     }
     socket.room = arg.room;
     socket.name = arg.name;
@@ -105,11 +106,13 @@ function room(id) {
 function leaveRoom(id, playerId) {
   var room = rooms[id];
   
+  try {
   for(var i = 0; i < room.players.length; i++)
     if(room.players[i].id == playerId) room.players.splice(i, 1);
 
    if(room.players.length == 0)
      delete rooms[id];
+   }catch(err){}
   //TODO: test DELETE ROOM IF EMPTY
 }
 
