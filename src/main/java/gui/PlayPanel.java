@@ -14,7 +14,7 @@ public class PlayPanel extends JFrame {
         JFrame frame = new JFrame("Grid Layout");
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(900,550);
+        frame.setSize(800,550);
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4,7,7,5));
         JLabel card1 = new JLabel("BlackCard",SwingConstants.CENTER);
@@ -43,7 +43,6 @@ public class PlayPanel extends JFrame {
         JLabel card21 = new JLabel("");
 
         JPanel confirm = new JPanel(new GridLayout(3, 1,0, 10));
-        confirm.setBackground(Color.black);
         JButton confirmBtn = new JButton("Confirm");
         confirm.add(new JLabel(""));
         confirm.add(confirmBtn);
@@ -83,6 +82,7 @@ public class PlayPanel extends JFrame {
         panel.add(card20);
         panel.add(card21);
 
+        confirm.setBackground(Color.black);
         panel.add(confirm);
         panel.add(card22);
         panel.add(card23);
