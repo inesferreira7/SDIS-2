@@ -81,5 +81,9 @@ public class Player{
 
         return id.equals(player.id);
     }
+
+    public DatagramSocket getSocket() {
+        return socket;
+    }
 }
 

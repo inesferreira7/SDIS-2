@@ -5,6 +5,8 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import logic.Card;
+import logic.CommunicationThread;
+import logic.GameLogic;
 import logic.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -145,6 +147,7 @@ public class LoginClient {
                 JSONArray data = (JSONArray) objects[0];
 
                 getMyRoom().setPlayers(data, true);
+                new CommunicationThread(me.getSocket(), GameLogic.getInstance()).run();
             }
         });
     }
