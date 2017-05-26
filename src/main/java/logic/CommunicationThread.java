@@ -67,7 +67,6 @@ public class CommunicationThread extends Thread{
         else if(cmdSplit[0].equals(MessageType.WHITECARDPICK.name())){
             if(cmdSplit.length < 4){
                 int sender = Integer.parseInt(cmdSplit[1]);
-                int numberCards = Integer.parseInt(cmdSplit[2]);
                 ArrayList<WhiteCard> res = new ArrayList<>();
                 for (int j = 3; j < cmdSplit.length; j++){
                     res.add(new WhiteCard(cmdSplit[j], logic.getPlayers().get(sender)));
