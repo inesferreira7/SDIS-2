@@ -8,24 +8,22 @@ import java.awt.*;
  */
 public class PlayPanel extends JFrame {
 
-    public static JTextArea createVoidCard(){
-        JTextArea card = new JTextArea("empty text card");
-        card.setLineWrap(true);
-        card.setWrapStyleWord(true);
-        card.setBackground(Color.white);
-        card.setForeground(Color.black);
-        card.setFont(new Font("Georgia", Font.BOLD, 14));
-        card.setEditable(false);
+    private JPanel panel;
 
-        return card;
+    private static PlayPanel instance = null;
+
+    public static PlayPanel getInstance() {
+        if(instance == null)
+            instance = new PlayPanel();
+        return instance;
     }
 
-    public static void main(String[] args){
-        JFrame frame = new JFrame("Grid Layout");
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800,550);
-        JPanel panel = new JPanel();
+    public static boolean isInstanciated() {
+        return instance != null;
+    }
+
+    public PlayPanel(){
+        panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(30, 10, 20, 10));
         panel.setLayout(new GridLayout(4,7,20,15));
         JLabel card1 = new JLabel("BlackCard",SwingConstants.CENTER);
@@ -98,8 +96,27 @@ public class PlayPanel extends JFrame {
         panel.add(card28);
 
         panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-        frame.add(panel);
-        frame.setVisible(true);
+    }
+
+    public JTextArea createVoidCard(){
+        JTextArea card = new JTextArea("empty text card");
+        card.setLineWrap(true);
+        card.setWrapStyleWord(true);
+        card.setBackground(Color.white);
+        card.setForeground(Color.black);
+        card.setFont(new Font("Georgia", Font.BOLD, 14));
+        card.setEditable(false);
+
+        return card;
+    }
+
+    public JPanel getPanel(){
+        return panel;
+    }
+
+
+    public void main(String[] args){
+        PlayPanel.getInstance();
     }
 
 }
