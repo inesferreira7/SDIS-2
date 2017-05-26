@@ -172,6 +172,20 @@ public class CardsAgainstHumanity extends JFrame{
                 client.joinRoom(clientName, roomName);
             }
         });
+
+        joinRoom.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(displayRooms.isSelectionEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Select the room you want to join");
+                    return;
+                }
+                String temp = displayRooms.getSelectedValue().toString();
+                String[] splited = temp.split(" ");
+                String roomName = splited[1];
+                client.joinRoom(clientName, roomName);
+            }
+        });
     }
 
     public void changePanel(JPanel oldPanel, JPanel newPanel){

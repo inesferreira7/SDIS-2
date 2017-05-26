@@ -176,11 +176,8 @@ public class LoginClient {
         }
 
         myRoom = roomName;
-
-        Room newRoom = new Room(roomName);
-        if(!rooms.contains(newRoom)){
-            rooms.add(newRoom);
-        }
+        if(!rooms.contains(new Room(myRoom)))
+            rooms.add(new Room(myRoom));
 
         socket.emit("room", json);
         socket.emit("getRooms");
