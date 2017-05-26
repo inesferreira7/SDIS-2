@@ -1,6 +1,5 @@
 package gui;
 
-import com.sun.scenario.effect.impl.sw.java.JSWBlend_COLOR_BURNPeer;
 import logic.Card;
 import logic.login.LoginClient;
 import logic.login.Room;
@@ -60,7 +59,7 @@ public class CardsAgainstHumanity extends JFrame{
 
 
 
-        this.setSize(900,550);
+        this.setSize(800,550);
 
         Toolkit tk = Toolkit.getDefaultToolkit();
 
@@ -140,6 +139,7 @@ public class CardsAgainstHumanity extends JFrame{
         rightRoomPanel.add(new JLabel(""));
         rightRoomPanel.add(new JLabel(""));
         rightRoomPanel.add(new JLabel(""));
+        rightRoomPanel.add(new JLabel(""));
 
 
         createRoom = new JButton("Create Room");
@@ -163,7 +163,6 @@ public class CardsAgainstHumanity extends JFrame{
         rightRoomPanel.add(new JLabel(""));
         rightRoomPanel.add(new JLabel(""));
         rightRoomPanel.add(startGame);
-        rightRoomPanel.add(new JLabel(""));
         rightRoomPanel.add(new JLabel(""));
         rightRoomPanel.add(new JLabel(""));
         rightRoomPanel.add(new JLabel(""));
