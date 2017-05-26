@@ -67,4 +67,15 @@ public class Room{
             if(players.get(i).equals(p)) players.remove(i);
         this.numPlayers = players.size();
     }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "id='" + id + '\'' +
+                ", gameStarted=" + gameStarted +
+                ", gameEnded=" + gameEnded +
+                ", players=" + players +
+                ", numPlayers=" + numPlayers +
+                '}';
+    }
 }
