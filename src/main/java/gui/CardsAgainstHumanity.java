@@ -250,7 +250,7 @@ public class CardsAgainstHumanity extends JFrame{
         if(listScroller != null)
             leftRoomPanel.remove(listScroller);
         listScroller = new JScrollPane(displayRooms);
-        listScroller.setBorder(BorderFactory.createTitledBorder("Name: Players"));
+        listScroller.setBorder(BorderFactory.createTitledBorder("Name - Players"));
         listScroller.setMaximumSize(new Dimension(250,300));
         listScroller.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -268,7 +268,7 @@ public class CardsAgainstHumanity extends JFrame{
     public String[] createData(ArrayList<Room> rooms){
 
         for(int i = 0; i < rooms.size(); i++){
-            String text = rooms.get(i).getId() + " " + rooms.get(i).getNumPlayers() + "/" + GameLogic.MAX_NUM_PLAYERS;
+            String text = rooms.get(i).getId() + " - " + rooms.get(i).getNumPlayers() + "/" + GameLogic.MAX_NUM_PLAYERS;
             if(rooms.get(i).equals(client.getMyRoom()))
                 text = "<html><b>" + text + "</b></html>";
             roomList[i] = text;
