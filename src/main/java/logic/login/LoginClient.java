@@ -158,8 +158,10 @@ public class LoginClient {
                 GameLogic.getInstance().setMe(me);
                 CardsAgainstHumanity.getInstance().startPlayPanel();
 
-                if(GameLogic.getInstance().getPlayers().get(GameLogic.getInstance().getLeaderIndex()).equals(me))
+                if(GameLogic.getInstance().getPlayers().get(GameLogic.getInstance().getLeaderIndex()).equals(me)) {
+                    GameLogic.getInstance().sendWhiteCards();
                     GameLogic.getInstance().sendBlackCard();
+                }
             }
         });
     }
