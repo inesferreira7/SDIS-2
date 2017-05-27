@@ -1,10 +1,16 @@
 package gui;
 
+import logic.BlackCard;
+import logic.GameLogic;
+import logic.Player;
+import logic.WhiteCard;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by up201404990 on 26-05-2017.
@@ -13,7 +19,9 @@ public class PlayPanel extends JFrame {
 
     private JPanel panel;
 
-    private static final int NUM_GRID = 28;
+    private static final int NUM_LINES = 4;
+    private static final int NUM_COLUMNS = 7;
+    private static final int NUM_GRID = NUM_COLUMNS*NUM_LINES;
 
     private static PlayPanel instance = null;
 
@@ -29,28 +37,67 @@ public class PlayPanel extends JFrame {
         return instance != null;
     }
 
+    public JTextArea createBlackCard(String text) {
+        JTextArea card = new JTextArea(text);
+
+        card.setEditable(false);
+        card.setHighlighter(null);
+        card.setBackground(Color.black);
+        card.setForeground(Color.white);
+
+        return card;
+    }
+
     public void initializeCards(){
         cards = new ArrayList<>();
-        JTextArea card1 = new JTextArea("BlackCard");
-        card1.setBackground(Color.black);
-        card1.setForeground(Color.white);
-
+        JTextArea card1 = createBlackCard("Black Card");
         cards.add(card1);
 
         for(int i = 1; i< NUM_GRID; i++) {
             if(i == 6 || i == 7 || (i > 12 && i < 22) || i == 27){
-                JTextArea temp = new JTextArea("");
-                temp.setEditable(false);
-                temp.setBackground(Color.black);
-                cards.add(temp);
+                cards.add(createBlackCard(""));
             }
             else
-                cards.add(createVoidCard());
+                cards.add(createWhiteCard(""));
         }
     }
 
-    public JTextArea createVoidCard(){
-        JTextArea card = new JTextArea("empty text card");
+    public void refreshInterface() {
+        GameLogic logic = GameLogic.getInstance();
+        Component[] components = new Component[NUM_GRID];
+
+        for (int i = 0; i < components.length; i++) components[i] = createBlackCard("");
+
+        String text = "";
+        if(logic.getBlackCard() != null) text = logic.getBlackCard().getText();
+            components[0] = createBlackCard(text);
+
+        int i = 1;
+        for (Map.Entry<Player, ArrayList<WhiteCard>> entry : logic.getWhiteCardPicks().entrySet()) {
+            int j = i;
+            for(WhiteCard card : entry.getValue()){
+                String cardText = "Waiting for\nAll Players\nto pick...";
+                if(logic.allPlayersPicked()) cardText = card.getText();
+                components[j] = createWhiteCard(cardText);
+                j +=  NUM_COLUMNS;
+            }
+            i++;
+        }
+
+        i = (NUM_LINES-1)*NUM_COLUMNS + 1;
+        for (WhiteCard card : logic.getMe().getCards()) {
+            components[i] = createWhiteCard(card.getText());
+            i++;
+        }
+
+        panel.removeAll();
+        for (i = 0; i < components.length; i++) panel.add(components[i]);
+
+    }
+
+    public JTextArea createWhiteCard(String text){
+        JTextArea card = new JTextArea(text);
+        card.setHighlighter(null);
         card.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -108,10 +155,7 @@ public class PlayPanel extends JFrame {
     public PlayPanel(){
         initializeCards();
         initializePanel();
-    }
-
-    public void main(String[] args){
-        PlayPanel.getInstance();
+        refreshInterface();
     }
 
 }

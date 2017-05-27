@@ -50,7 +50,7 @@ public class Player implements Serializable{
         this.name = name;
     }
 
-    public ArrayList getCards() {
+    public ArrayList<WhiteCard> getCards() {
         return cards;
     }
 
