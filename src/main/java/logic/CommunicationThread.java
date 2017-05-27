@@ -1,10 +1,13 @@
 package logic;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Base64;
 
 /**
  * Created by chrx on 5/26/17.
@@ -31,6 +34,7 @@ public class CommunicationThread extends Thread{
 
                 // figure out response
                 String cmd = new String(packet.getData(), 0, packet.getLength());
+                System.out.println(cmd);
                 buf = processCommand(cmd).getBytes();
 
                 // send the response to the client at "address" and "port"
@@ -54,10 +58,15 @@ public class CommunicationThread extends Thread{
             }
         }
         else if(cmdSplit[0].equals(MessageType.BLACKCARD.name())){
-            if(cmdSplit.length == 3){
-                int numberCards = Integer.parseInt(cmdSplit[1]);
-                String blackcard = cmdSplit[2];
-                logic.setBlackCard(new BlackCard(blackcard, numberCards));
+            if(cmdSplit.length == 2){
+                try {
+                    ByteArrayInputStream bais = new ByteArrayInputStream(Base64.getDecoder().decode(cmdSplit[1]));
+                    ObjectInputStream ois = new ObjectInputStream(bais);
+                    BlackCard bc = (BlackCard) ois.readObject();
+                    logic.setBlackCard(bc);
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
                 return MessageType.ACK.name() + " " + MessageType.BLACKCARD.name();
             }
         }
