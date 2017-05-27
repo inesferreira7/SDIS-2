@@ -151,11 +151,12 @@ public class LoginClient {
 
                 getMyRoom().setPlayers(data, true);
                 try {
-                    new CommunicationThread(GameLogic.getInstance(), new DatagramSocket(SOCKET_PORT, me.getIp())).start();
+                    new CommunicationThread(GameLogic.getInstance(), new DatagramSocket(SOCKET_PORT)).start();
                 } catch (SocketException e) {
                     e.printStackTrace();
                 }
                 GameLogic.getInstance().setPlayers(getMyRoom().getPlayers());
+                System.out.println(GameLogic.getInstance().getPlayers());
                 GameLogic.getInstance().setMe(me);
                 CardsAgainstHumanity.getInstance().startPlayPanel();
 
