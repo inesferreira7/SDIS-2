@@ -66,6 +66,7 @@ public class CommunicationThread extends Thread{
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
+                logic.setGameState(GameLogic.PLAYERS_PICKING);
                 return MessageType.ACK.name() + " " + MessageType.BLACKCARD.name();
             }
         }
@@ -88,13 +89,16 @@ public class CommunicationThread extends Thread{
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-                logic.addWhiteCardToBoard(res);
+                logic.addWhiteCardsToBoard(res);
+                if(logic.allPlayersPicked())
+                    logic.setGameState(GameLogic.PICK_WINNER);
                 return MessageType.ACK.name() + " " + MessageType.WHITECARDPICK.name();
             }
         }
         else if(cmdSplit[0].equals(MessageType.WINNERPICK.name())){
             if(cmdSplit.length == 2){
                 logic.getPlayers().get(Integer.parseInt(cmdSplit[1])).addPoints(1);
+                logic.setGameState(GameLogic.END_ROUND);
                 return MessageType.ACK.name() + " " + MessageType.WINNERPICK.name();
             }
         }
@@ -109,7 +113,7 @@ public class CommunicationThread extends Thread{
                 } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-
+                
                 return MessageType.ACK.name() + " " + MessageType.RETRIEVEWHITECARD.name();
             }
         }

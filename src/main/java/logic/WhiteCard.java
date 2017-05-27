@@ -16,6 +16,9 @@ public class WhiteCard extends Card {
         return owner;
     }
 
+    public void setOwner(Player owner) {
+        this.owner = owner;
+    }
     @Override
     public String toString() {
         return "WhiteCard{text=" + text + ", " +
