@@ -37,7 +37,7 @@ public class PlayPanel extends JFrame {
         public void mouseClicked(MouseEvent mouseEvent) {
 
             GameLogic logic = GameLogic.getInstance();
-            if (logic.getGameState() == GameLogic.PLAYERS_PICKING && !logic.playerPicked(logic.getMe())) {
+            if (logic.getGameState() == GameLogic.PLAYERS_PICKING && !logic.playerPicked(logic.getMe()) && !logic.isCzar(logic.getMe())) {
                 JTextArea clickedCard = (JTextArea) mouseEvent.getSource();
                 if (logic.getBlackCard().getPick() > 1) {
                     if (clickedCard.getBorder().equals(selectedBorder))
