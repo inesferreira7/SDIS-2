@@ -23,7 +23,7 @@ import java.util.Iterator;
  */
 public class LoginClient {
 
-    private final int SOCKET_PORT = 4123;
+    public static final int SOCKET_PORT = 4123;
 
     private ArrayList<Room> rooms;
     private Socket socket;
@@ -157,6 +157,9 @@ public class LoginClient {
                 GameLogic.getInstance().setPlayers(getMyRoom().getPlayers());
                 GameLogic.getInstance().setMe(me);
                 CardsAgainstHumanity.getInstance().startPlayPanel();
+
+                if(GameLogic.getInstance().getPlayers().get(0).equals(me))
+                    GameLogic.getInstance().sendBlackCard();
             }
         });
     }

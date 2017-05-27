@@ -1,11 +1,12 @@
 package logic;
 
+import logic.login.LoginClient;
 import parser.CardDatabase;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
-import java.util.Stack;
+import java.io.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.util.*;
 
 /**
  * Created by up201404990 on 25-05-2017.
@@ -26,6 +27,7 @@ public class GameLogic {
     /*test variables*/
     public static final int MIN_NUM_PLAYERS = 3, MAX_NUM_PLAYERS = 6;
     public static final int PLAYERS_PICKING = 0, PICK_WINNER = 1, END_ROUND = 2;
+    public static final String[] lastMessage = {"NEWCZAR", "BLACKCARD", "PICKINGCARDS", "ELECTBEST", "RETRIEVECARD"};
     private int gameState;
     public static final int WHITECARDS_PER_PLAYER = 5;
 
@@ -144,5 +146,35 @@ public class GameLogic {
 
     public void setMe(Player me) {
         this.me = me;
+    }
+
+    public void sendBlackCard() {
+        System.out.println("Sending black card...");
+        BlackCard chosenCard = blackCardsdeck.pop();
+
+        String cmd = MessageType.BLACKCARD.name();
+        cmd += " ";
+
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(chosenCard);
+            oos.close();
+            cmd += Base64.getEncoder().encodeToString(baos.toByteArray());
+            baos.close();
+
+            DatagramSocket tempSocket = new DatagramSocket();
+            for (Player p:
+                 players) {
+                if(!p.equals(me)) {
+                    DatagramPacket packet = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length, p.getIp(), LoginClient.SOCKET_PORT);
+                    tempSocket.send(packet);
+                }
+            }
+            tempSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

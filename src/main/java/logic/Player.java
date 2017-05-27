@@ -70,6 +70,10 @@ public class Player implements Serializable{
         cards.remove(card);
     }
 
+    public InetAddress getIp() {
+        return ip;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
