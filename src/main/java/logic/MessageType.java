@@ -1,0 +1,5 @@
+package  logic;
+
+public enum MessageType{
+    CZARCHANGE, BLACKCARD, WHITECARDPICK, WINNERPICK, RETRIEVEWHITECARD, ACK;
+}

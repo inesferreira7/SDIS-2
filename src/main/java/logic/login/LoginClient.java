@@ -145,7 +145,7 @@ public class LoginClient {
                 JSONArray data = (JSONArray) objects[0];
 
                 getMyRoom().setPlayers(data, true);
-                new CommunicationThread(me.getSocket(), GameLogic.getInstance()).run();
+                new CommunicationThread(GameLogic.getInstance(), me).run();
             }
         });
     }
