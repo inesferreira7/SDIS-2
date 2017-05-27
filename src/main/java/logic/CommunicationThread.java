@@ -15,7 +15,6 @@ import java.util.Base64;
 public class CommunicationThread extends Thread{
 
     private GameLogic logic;
-    private Player me;
     private DatagramSocket socket;
 
     public CommunicationThread(GameLogic logic, DatagramSocket socket) {
@@ -71,11 +70,23 @@ public class CommunicationThread extends Thread{
             }
         }
         else if(cmdSplit[0].equals(MessageType.WHITECARDPICK.name())){
-            if(cmdSplit.length < 4){
-                int sender = Integer.parseInt(cmdSplit[1]);
+            int noCards = Integer.parseInt(cmdSplit[1]);
+            if(cmdSplit.length == 2 + noCards){
                 ArrayList<WhiteCard> res = new ArrayList<>();
-                for (int j = 3; j < cmdSplit.length; j++){
-                    res.add(new WhiteCard(cmdSplit[j], logic.getPlayers().get(sender)));
+                try {
+                    for (int j = 2; j < cmdSplit.length; j++){
+                        ByteArrayInputStream bais = new ByteArrayInputStream(Base64.getDecoder().decode(cmdSplit[j]));
+                        ObjectInputStream ois = new ObjectInputStream(bais);
+                        WhiteCard wc = (WhiteCard) ois.readObject();
+
+                        int ownerIndex = logic.getPlayers().indexOf(wc.getOwner()); //the player that comes in the card owner
+                        Player realOwner = logic.getPlayers().get(ownerIndex); //is a copy of the owner, here we are getting
+                        wc.setOwner(realOwner); //the real object
+
+                        res.add(wc);
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
                 logic.addWhiteCardToBoard(res);
                 return MessageType.ACK.name() + " " + MessageType.WHITECARDPICK.name();
@@ -89,7 +100,16 @@ public class CommunicationThread extends Thread{
         }
         else if(cmdSplit[0].equals(MessageType.RETRIEVEWHITECARD.name())){
             if(cmdSplit.length == 2){
-                me.addCard(new WhiteCard(cmdSplit[1], me));
+                try {
+                    ByteArrayInputStream bais = new ByteArrayInputStream(Base64.getDecoder().decode(cmdSplit[1]));
+                    ObjectInputStream ois = new ObjectInputStream(bais);
+                    WhiteCard wc = (WhiteCard) ois.readObject();
+                    wc.setOwner(logic.getMe());
+                    logic.getMe().addCard(wc);
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
                 return MessageType.ACK.name() + " " + MessageType.RETRIEVEWHITECARD.name();
             }
         }
