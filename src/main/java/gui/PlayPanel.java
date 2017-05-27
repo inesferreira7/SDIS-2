@@ -44,6 +44,7 @@ public class PlayPanel extends JFrame {
         card.setHighlighter(null);
         card.setBackground(Color.black);
         card.setForeground(Color.white);
+        card.setLineWrap(true);
 
         return card;
     }
@@ -63,6 +64,7 @@ public class PlayPanel extends JFrame {
     }
 
     public void refreshInterface() {
+        System.out.println("updating interface");
         GameLogic logic = GameLogic.getInstance();
         Component[] components = new Component[NUM_GRID];
 
@@ -92,6 +94,8 @@ public class PlayPanel extends JFrame {
 
         panel.removeAll();
         for (i = 0; i < components.length; i++) panel.add(components[i]);
+        panel.revalidate();
+//        panel.repaint();
 
     }
 

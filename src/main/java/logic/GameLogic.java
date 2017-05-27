@@ -1,5 +1,6 @@
 package logic;
 
+import gui.PlayPanel;
 import logic.login.LoginClient;
 import parser.CardDatabase;
 
@@ -162,7 +163,9 @@ public class GameLogic {
                     }
 
                     String cmd = stringBuilder.toString();
-                    DatagramPacket packet = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length, p.getIp(), LoginClient.SOCKET_PORT);
+                    byte[] buf = cmd.getBytes();
+                    DatagramPacket packet = new DatagramPacket(buf, buf.length, p.getIp(), LoginClient.SOCKET_PORT);
+//                System.out.println(packet.getLength());
                     tempSocket.send(packet);
 //                }
             }
@@ -186,6 +189,7 @@ public class GameLogic {
             }
             blackCard = null;
         }
+        PlayPanel.getInstance().refreshInterface();
         this.gameState = gameState;
     }
 
@@ -202,10 +206,10 @@ public class GameLogic {
             DatagramSocket tempSocket = new DatagramSocket();
             for (Player p:
                  players) {
-                if(!p.equals(me)) {
+//                if(!p.equals(me)) {
                     DatagramPacket packet = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length, p.getIp(), LoginClient.SOCKET_PORT);
                     tempSocket.send(packet);
-                }
+//                }
             }
             tempSocket.close();
         } catch (IOException e) {

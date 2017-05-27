@@ -149,6 +149,7 @@ public class LoginClient {
                 JSONArray data = (JSONArray) objects[0];
 
                 getMyRoom().setPlayers(data, true);
+                me = getMyRoom().getPlayers().get(getMyRoom().getPlayers().indexOf(me));
                 try {
                     new CommunicationThread(GameLogic.getInstance(), new DatagramSocket(SOCKET_PORT)).start();
                 } catch (SocketException e) {
