@@ -6,6 +6,7 @@ import parser.CardDatabase;
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.util.*;
 
 /**
@@ -21,6 +22,8 @@ public class GameLogic {
     private Stack<WhiteCard> whiteCardsDeck;
     private Stack<BlackCard> blackCardsdeck;
     private int czar;
+
+    private int[] leaders = new int[]{0,1,2};
 
     private Player me;
 
@@ -82,7 +85,7 @@ public class GameLogic {
     }
 
     public boolean allPlayersPicked() {
-        return whiteCardPicks.size() == players.size();
+        return whiteCardPicks.size() == (players.size() - 1);
     }
 
     public void addWhiteCardsToBoard(ArrayList<WhiteCard> whiteCard) {
@@ -104,26 +107,6 @@ public class GameLogic {
 
     public void setBlackCard(BlackCard b){
         blackCard = b;
-    }
-
-    public void makePlay(){
-
-        pickBlackCard();
-        dealWhiteCards(WHITECARDS_PER_PLAYER);
-
-        if(gameState == PLAYERS_PICKING){
-            for(int i = 0; i < players.size(); i++){
-                //playerPickedCard(currentPlayer ,wCard); FIXME
-            }
-        }
-
-        if(gameState == PICK_WINNER){
-            selectWinner(wCard);
-        }
-
-        if(gameState == END_ROUND){
-            endRound();
-        }
     }
 
     /*public void playerPickedCard(Player player, WhiteCard whiteCard){ FIXME
@@ -156,7 +139,53 @@ public class GameLogic {
         return gameState;
     }
 
+    public void sendWhiteCards() {
+        try {
+            DatagramSocket tempSocket = new DatagramSocket();
+            for (Player p:
+                    players) {
+//                if(!p.equals(me)) { TODO: Check if can send message to himself
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append(MessageType.RETRIEVEWHITECARD.name());
+                    stringBuilder.append(" ");
+                    ArrayList<WhiteCard> cards = new ArrayList<>();
+                    int numCards;
+                    if(blackCard != null) numCards = blackCard.getPick();
+                    else numCards = WHITECARDS_PER_PLAYER;
+                    for (int i = 0; i < numCards; i++)
+                        cards.add(whiteCardsDeck.pop());
+                    stringBuilder.append(Integer.toString(cards.size()));
+                    for (WhiteCard c: cards) {
+                        stringBuilder.append(" ");
+                        stringBuilder.append(c.toSerializedString());
+                    }
+
+                    String cmd = stringBuilder.toString();
+                    DatagramPacket packet = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length, p.getIp(), LoginClient.SOCKET_PORT);
+                    tempSocket.send(packet);
+//                }
+            }
+            tempSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setGameState(int gameState) {
+        if(gameState == PLAYERS_PICKING) {
+            //TODO: Update interface
+            whiteCardPicks = new HashMap<>();
+        }
+        else if(gameState == PICK_WINNER) {
+            //TODO: Update interface - reveal choices
+        }
+        else if(gameState == END_ROUND) {
+            if(players.indexOf(me) == getLeaderIndex()) {
+                sendWhiteCards();
+            }
+            blackCard = null;
+        }
         this.gameState = gameState;
     }
 
@@ -168,12 +197,7 @@ public class GameLogic {
         cmd += " ";
 
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(chosenCard);
-            oos.close();
-            cmd += Base64.getEncoder().encodeToString(baos.toByteArray());
-            baos.close();
+            cmd += chosenCard.toSerializedString();
 
             DatagramSocket tempSocket = new DatagramSocket();
             for (Player p:
@@ -188,5 +212,21 @@ public class GameLogic {
             e.printStackTrace();
         }
 
+    }
+
+    public HashMap<Player, ArrayList<WhiteCard>> getWhiteCardPicks() {
+        return whiteCardPicks;
+    }
+
+    public int getLeaderIndex() {
+        return getLeaderIndex(0);
+    }
+
+    public int getLeaderIndex(int leaderNo) {
+        return leaders[leaderNo];
+    }
+
+    public BlackCard getBlackCard() {
+        return blackCard;
     }
 }
