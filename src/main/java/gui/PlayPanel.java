@@ -66,7 +66,7 @@ public class PlayPanel extends JFrame {
         panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(30, 10, 20, 10));
         panel.setLayout(new GridLayout(4,7,20,15));
-        panel.setBackground(Color.gray);
+        panel.setBackground(Color.black);
 
         for(int i = 0; i < NUM_GRID; i++)
             panel.add(cards.get(i));
