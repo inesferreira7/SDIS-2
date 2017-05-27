@@ -197,6 +197,10 @@ public class GameLogic {
                 sendWhiteCards();
             }
             blackCard = null;
+            whiteCardPicks = new HashMap<>();
+            czar++;
+            if(players.indexOf(me) == getLeaderIndex())
+                sendBlackCard();
         }
         PlayPanel.getInstance().refreshInterface();
         this.gameState = gameState;
