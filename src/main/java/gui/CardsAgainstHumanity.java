@@ -197,6 +197,18 @@ public class CardsAgainstHumanity extends JFrame{
             }
         });
 
+        textField1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(textField1.getText().isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Insert valid name");
+                    return;
+                }
+                clientName = textField1.getText();
+                changePanel(thePanel,roomPanel);
+            }
+        });
+
         refresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

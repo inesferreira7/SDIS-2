@@ -25,9 +25,11 @@ public class PlayPanel extends JFrame {
     private static final int NUM_LINES = 4;
     private static final int NUM_COLUMNS = 7;
     private static final int NUM_GRID = NUM_COLUMNS * NUM_LINES;
+    private static final int SCORES_POS = 13;
     private static PlayPanel instance = null;
     int noSelectedCards = 0;
     private JPanel panel;
+    private JTextArea scores;
     private Border selectedBorder = BorderFactory.createMatteBorder(4, 4, 4, 4, Color.black);
     private Border deselectedBorder = null;
     private ArrayList<WhiteCard> selectedCards;
@@ -133,7 +135,17 @@ public class PlayPanel extends JFrame {
         selectedCards = new ArrayList<>();
         initializeCards();
         initializePanel();
+        initializeScores();
         refreshInterface();
+    }
+
+    public void initializeScores(){
+        scores = new JTextArea("");
+        scores.setBackground(Color.black);
+        scores.setForeground(Color.white);
+        scores.setFont(new Font("Georgia", Font.BOLD, 14));
+        scores.setLineWrap(true);
+        scores.setEditable(false);
     }
 
     public static PlayPanel getInstance() {
@@ -221,11 +233,26 @@ public class PlayPanel extends JFrame {
             i++;
         }
 
+        StringBuilder sb = new StringBuilder(512);
+        sb.append("Points:\n\n");
+        for(i = 0; i < GameLogic.getInstance().getPlayers().size(); i++){
+            sb.append(GameLogic.getInstance().getPlayers().get(i).getName());
+            sb.append(": ");
+            sb.append(GameLogic.getInstance().getPlayers().get(i).getPoints());
+            sb.append("\n");
+        }
+
+        scores.setText(sb.toString());
+
         panel.removeAll();
-        for (i = 0; i < components.length; i++) panel.add(components[i]);
+        for (i = 0; i < components.length; i++){
+            if(i == SCORES_POS)
+                panel.add(scores);
+            else
+                panel.add(components[i]);
+        }
         panel.revalidate();
 //        panel.repaint();
-
     }
 
     public JTextArea createWhiteCard(String text, MouseListener listener) {
@@ -259,5 +286,4 @@ public class PlayPanel extends JFrame {
         deselectedBorder = cards.get(0).getBorder();
         panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
     }
-
 }

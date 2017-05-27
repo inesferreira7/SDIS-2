@@ -59,7 +59,7 @@ public class GameLogic {
         createDecks();
     }
 
-    public  void createDecks(){
+    public void createDecks(){
         CardDatabase.parseCards();
         long seed = System.nanoTime();
         Collections.shuffle(CardDatabase.getWhiteCards(), new Random(seed));
@@ -198,7 +198,7 @@ public class GameLogic {
             }
             blackCard = null;
             whiteCardPicks = new HashMap<>();
-            czar++;
+            czar = czar++ % players.size();
             if(players.indexOf(me) == getLeaderIndex())
                 sendBlackCard();
         }
