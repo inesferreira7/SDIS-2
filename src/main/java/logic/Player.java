@@ -1,6 +1,7 @@
 package logic;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.net.*;
 import java.util.ArrayList;
 
@@ -66,8 +67,11 @@ public class Player implements Serializable{
         this.points =+ points;
     }
 
-    public void removeCard(WhiteCard card){
-        cards.remove(card);
+    public void removeCards(ArrayList<WhiteCard> toRemoveCards){
+        for (Card c:
+             toRemoveCards) {
+            cards.remove(c);
+        }
     }
 
     public InetAddress getIp() {

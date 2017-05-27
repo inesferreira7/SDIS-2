@@ -226,6 +226,7 @@ public class CardsAgainstHumanity extends JFrame{
     }
 
     public void startPlayPanel() {
+        this.setSize(1024, 768);
         changePanel(roomPanel, PlayPanel.getInstance().getPanel());
     }
 

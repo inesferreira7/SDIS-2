@@ -69,20 +69,10 @@ public class GameLogic {
 
     }
 
-    public void pickBlackCard(){
-        blackCard = blackCardsdeck.peek();
-        blackCardsdeck.pop();
-    }
-
-
-    public void dealWhiteCards(int whiteCardsPerPlayer){
-        for(int i = 0; i < players.size();i++){
-            for(int j = 0; j < whiteCardsPerPlayer ; j++){
-                WhiteCard topDeckCard = whiteCardsDeck.peek();
-                players.get(i).addCard(topDeckCard);
-                whiteCardsDeck.pop();
-            }
-        }
+    public boolean playerPicked(Player p1) {
+        for(Player p2 : players)
+            if(p1.equals(p2)) return true;
+        return false;
     }
 
     public boolean allPlayersPicked() {
@@ -110,10 +100,28 @@ public class GameLogic {
         blackCard = b;
     }
 
-    /*public void playerPickedCard(Player player, WhiteCard whiteCard){ FIXME
-        player.removeCard(whiteCard);
-        addWhiteCardsToBoard(whiteCard);
-    }*/
+    public void playerPickedCard(ArrayList<WhiteCard> whiteCards){
+        me.removeCards(whiteCards);
+        try {
+            DatagramSocket tempSocket = new DatagramSocket();
+            StringBuilder builder = new StringBuilder();
+            builder.append(MessageType.WHITECARDPICK.name());
+            builder.append(" ");
+            builder.append(whiteCards.size());
+            for (Card c:
+                 whiteCards) {
+                builder.append(" ");
+                builder.append(c.toSerializedString());
+            }
+            String cmd = builder.toString();
+            for(Player p : players) {
+                DatagramPacket packet = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length, p.getIp(), LoginClient.SOCKET_PORT);
+                tempSocket.send(packet);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Player getMe() {
         return me;
@@ -232,5 +240,20 @@ public class GameLogic {
 
     public BlackCard getBlackCard() {
         return blackCard;
+    }
+
+    public Player getWhiteCardOwner(WhiteCard card) {
+        for (Map.Entry<Player, ArrayList<WhiteCard>> entry : whiteCardPicks.entrySet()) {
+            for (WhiteCard c:
+                 entry.getValue()) {
+                if(c.equals(card))
+                    return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    public boolean isCzar(Player p) {
+        return players.indexOf(p) == czar;
     }
 }
