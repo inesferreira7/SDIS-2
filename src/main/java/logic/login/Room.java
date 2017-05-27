@@ -77,7 +77,7 @@ public class Room{
                     String ip = player.getString("ip");
 
                     p.setPosition(position);
-                    p.createSocket(ip);
+                    p.setIp(ip);
                 }
 
                 players.add(p);

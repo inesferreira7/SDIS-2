@@ -1,19 +1,16 @@
 package logic;
 
-import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 
 public class Player{
-
-    private final int SOCKET_PORT = 4123;
 
     private String id;
     private String name;
     private ArrayList<WhiteCard> cards;
     private int position;
     private int points;
-    private DatagramSocket socket;
+    private InetAddress ip;
 
     public Player(String id, String name){
         this.id=id;
@@ -24,10 +21,10 @@ public class Player{
         this.cards=new ArrayList<>();
     }
 
-    public void createSocket(String address) {
+    public void setIp(String ip) {
         try {
-            socket = new DatagramSocket(SOCKET_PORT);
-        } catch (IOException e) {
+            this.ip = InetAddress.getByName(ip);
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
     }
@@ -82,8 +79,5 @@ public class Player{
         return id.equals(player.id);
     }
 
-    public DatagramSocket getSocket() {
-        return socket;
-    }
 }
 

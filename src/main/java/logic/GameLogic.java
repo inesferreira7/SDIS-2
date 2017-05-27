@@ -34,6 +34,12 @@ public class GameLogic {
         return instance;
     }
 
+    //CZARCHANGE [INT]
+    //BLACKCARD [INT] [TEXT]
+    //WHITECARDPICK [INT] [INT] "[STRING]"
+    //WINNERPICK [INT]
+    //RETRIEVEWHITECARD [TEXT]
+
     private GameLogic(){
         this.gameState = -1;
         players = new ArrayList<>();
