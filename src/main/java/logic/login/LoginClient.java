@@ -1,6 +1,7 @@
 package logic.login;
 
 import gui.CardsAgainstHumanity;
+import gui.PlayPanel;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -23,7 +24,7 @@ import java.util.Iterator;
  */
 public class LoginClient {
 
-    private final int SOCKET_PORT = 4123;
+    public static final int SOCKET_PORT = 4123;
 
     private ArrayList<Room> rooms;
     private Socket socket;
@@ -150,11 +151,13 @@ public class LoginClient {
 
                 getMyRoom().setPlayers(data, true);
                 try {
-                    new CommunicationThread(GameLogic.getInstance(), new DatagramSocket(SOCKET_PORT), me).run();
+                    new CommunicationThread(GameLogic.getInstance(), new DatagramSocket(SOCKET_PORT)).start();
                 } catch (SocketException e) {
                     e.printStackTrace();
                 }
                 CardsAgainstHumanity.getInstance().startPlayPanel();
+                GameLogic.getInstance().setPlayers(getMyRoom().getPlayers());
+                GameLogic.getInstance().setMe(me);
             }
         });
     }

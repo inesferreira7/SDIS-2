@@ -12,13 +12,11 @@ import java.util.ArrayList;
 public class CommunicationThread extends Thread{
 
     private GameLogic logic;
-    private Player me;
     private DatagramSocket socket;
 
-    public CommunicationThread(GameLogic logic, DatagramSocket socket, Player me) {
+    public CommunicationThread(GameLogic logic, DatagramSocket socket) {
         this.logic = logic;
         this.socket = socket;
-        this.me = me;
     }
 
     public void run() {
@@ -32,6 +30,7 @@ public class CommunicationThread extends Thread{
 
                 // figure out response
                 String cmd = new String(packet.getData(), 0, packet.getLength());
+                System.out.println(cmd);
                 buf = processCommand(cmd).getBytes();
 
                 // send the response to the client at "address" and "port"
@@ -81,7 +80,7 @@ public class CommunicationThread extends Thread{
         }
         else if(cmdSplit[0].equals(MessageType.RETRIEVEWHITECARD.name())){
             if(cmdSplit.length == 2){
-                me.addCard(new WhiteCard(cmdSplit[1], me));
+                logic.getMe().addCard(new WhiteCard(cmdSplit[1], logic.getMe()));
                 return MessageType.ACK.name() + " " + MessageType.RETRIEVEWHITECARD.name();
             }
         }

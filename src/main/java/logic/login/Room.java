@@ -104,6 +104,10 @@ public class Room{
         this.numPlayers = players.size();
     }
 
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

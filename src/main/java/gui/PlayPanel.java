@@ -1,9 +1,17 @@
 package gui;
 
+import logic.GameLogic;
+import logic.Player;
+import logic.login.LoginClient;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
@@ -12,6 +20,7 @@ import java.util.ArrayList;
 public class PlayPanel extends JFrame {
 
     private JPanel panel;
+    private GameLogic logic;
 
     private static final int NUM_GRID = 28;
 
@@ -55,7 +64,19 @@ public class PlayPanel extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    System.out.println("double clicked");
+                    try {
+                        DatagramSocket socket = new DatagramSocket();
+                        byte[] buf = "Gay".getBytes();
+                        for (Player p : logic.getPlayers()) {
+                            if(!p.equals(logic.getMe())){
+                                DatagramPacket dp = new DatagramPacket(buf, buf.length, p.getIp(), LoginClient.SOCKET_PORT);
+                                socket.send(dp);
+                            }
+                        }
+                        socket.close();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
 
@@ -108,6 +129,7 @@ public class PlayPanel extends JFrame {
     public PlayPanel(){
         initializeCards();
         initializePanel();
+        logic = GameLogic.getInstance();
     }
 
     public void main(String[] args){

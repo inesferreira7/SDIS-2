@@ -1,5 +1,5 @@
-// var socket = require('socket.io-client')('https://sdis-cardsagainsthumanity.herokuapp.com');
- var socket = require('socket.io-client')('http://localhost:8001');
+var socket = require('socket.io-client')('https://sdis-cardsagainsthumanity.herokuapp.com');
+ // var socket = require('socket.io-client')('http://localhost:8001');
 
 socket.on('newPlayer', function(data){
   console.log(data);

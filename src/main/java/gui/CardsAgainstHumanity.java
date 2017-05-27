@@ -265,8 +265,8 @@ public class CardsAgainstHumanity extends JFrame{
 
         leftRoomPanel.add(listScroller);
 
-        if(client.getMyRoom() != null && client.getMe().equals(client.getMyRoom().getOwner())
-                && client.getMyRoom().getNumPlayers() >= GameLogic.MIN_NUM_PLAYERS)
+        if(client.getMyRoom() != null && client.getMe().equals(client.getMyRoom().getOwner()))
+//                && client.getMyRoom().getNumPlayers() >= GameLogic.MIN_NUM_PLAYERS)
             startGame.setVisible(true);
         else
             startGame.setVisible(false);

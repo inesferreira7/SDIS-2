@@ -69,6 +69,10 @@ public class Player{
         cards.remove(card);
     }
 
+    public InetAddress getIp() {
+        return ip;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
