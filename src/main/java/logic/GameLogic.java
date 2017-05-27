@@ -69,9 +69,10 @@ public class GameLogic {
 
     }
 
-    public boolean playerPicked(Player p1) {
-        for(Player p2 : players)
-            if(p1.equals(p2)) return true;
+    public boolean playerPicked(Player p) {
+        for(Map.Entry<Player, ArrayList<WhiteCard>> entry : whiteCardPicks.entrySet()) {
+            if(entry.getKey().equals(p)) return true;
+        }
         return false;
     }
 
