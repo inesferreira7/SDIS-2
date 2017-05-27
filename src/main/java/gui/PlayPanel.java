@@ -2,6 +2,8 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 /**
@@ -38,6 +40,7 @@ public class PlayPanel extends JFrame {
         for(int i = 1; i< NUM_GRID; i++) {
             if(i == 6 || i == 7 || (i > 12 && i < 22) || i == 27){
                 JTextArea temp = new JTextArea("");
+                temp.setEditable(false);
                 temp.setBackground(Color.black);
                 cards.add(temp);
             }
@@ -48,6 +51,34 @@ public class PlayPanel extends JFrame {
 
     public JTextArea createVoidCard(){
         JTextArea card = new JTextArea("empty text card");
+        card.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    System.out.println("double clicked");
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
         card.setLineWrap(true);
         card.setWrapStyleWord(true);
         card.setBackground(Color.white);
