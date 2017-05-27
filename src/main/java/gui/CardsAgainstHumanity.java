@@ -152,13 +152,6 @@ public class CardsAgainstHumanity extends JFrame{
         refresh = new JButton("Refresh");
         startGame = new JButton("Start Game");
 
-        startGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                changePanel(roomPanel, new PlayPanel().getPanel());
-            }
-        });
-
         //rightRoomPanel.add(Box.createRigidArea(new Dimension(0,150)));
         rightRoomPanel.add(refresh);
         rightRoomPanel.add(new JLabel(""));
@@ -185,6 +178,7 @@ public class CardsAgainstHumanity extends JFrame{
         startGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                changePanel(roomPanel, new PlayPanel().getPanel());
                 client.sendStartGame();
             }
         });
