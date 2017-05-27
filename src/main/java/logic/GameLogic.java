@@ -16,7 +16,7 @@ public class GameLogic {
     WhiteCard wCard;
     Player currentPlayer;
     private ArrayList<Player> players;
-    private ArrayList< ArrayList<WhiteCard> > whiteCardPicks;
+    private HashMap<Player, ArrayList<WhiteCard> > whiteCardPicks;
     private BlackCard blackCard;
     private Stack<WhiteCard> whiteCardsDeck;
     private Stack<BlackCard> blackCardsdeck;
@@ -47,7 +47,7 @@ public class GameLogic {
     private GameLogic(){
         this.gameState = -1;
         players = new ArrayList<>();
-        whiteCardPicks = new ArrayList<>();
+        whiteCardPicks = new HashMap<>();
         whiteCardsDeck = new Stack<>();
         blackCardsdeck = new Stack<>();
         czar = 0;
@@ -81,8 +81,12 @@ public class GameLogic {
         }
     }
 
-    public void addWhiteCardToBoard(ArrayList<WhiteCard> whiteCard) {
-        whiteCardPicks.add(whiteCard);
+    public boolean allPlayersPicked() {
+        return whiteCardPicks.size() == players.size();
+    }
+
+    public void addWhiteCardsToBoard(ArrayList<WhiteCard> whiteCard) {
+        whiteCardPicks.put(whiteCard.get(0).getOwner(), whiteCard);
     }
 
     public void clearBoard(){
@@ -124,7 +128,7 @@ public class GameLogic {
 
     /*public void playerPickedCard(Player player, WhiteCard whiteCard){ FIXME
         player.removeCard(whiteCard);
-        addWhiteCardToBoard(whiteCard);
+        addWhiteCardsToBoard(whiteCard);
     }*/
 
     public Player getMe() {
@@ -146,6 +150,14 @@ public class GameLogic {
 
     public void setMe(Player me) {
         this.me = me;
+    }
+
+    public int getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(int gameState) {
+        this.gameState = gameState;
     }
 
     public void sendBlackCard() {
