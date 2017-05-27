@@ -150,7 +150,7 @@ public class LoginClient {
 
                 getMyRoom().setPlayers(data, true);
                 try {
-                    new CommunicationThread(GameLogic.getInstance(), new DatagramSocket(SOCKET_PORT)).run();
+                    new CommunicationThread(GameLogic.getInstance(), new DatagramSocket(SOCKET_PORT)).start();
                 } catch (SocketException e) {
                     e.printStackTrace();
                 }
