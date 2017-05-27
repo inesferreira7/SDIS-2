@@ -29,6 +29,7 @@ public class CardsAgainstHumanity extends JFrame{
     private JPanel rightPanel;
     private JPanel leftRoomPanel;
     private JPanel rightRoomPanel;
+    private JPanel roomPanel;
     private JButton createRoom;
     private JButton joinRoom;
     private JButton refresh;
@@ -130,7 +131,7 @@ public class CardsAgainstHumanity extends JFrame{
 
         //ENTER ROOM MENU
 
-        JPanel roomPanel = new JPanel(new BorderLayout());
+        roomPanel = new JPanel(new BorderLayout());
 
         rightRoomPanel = new JPanel(new GridLayout(7, 3, 0, 50));
         rightRoomPanel.setBackground(Color.black);
@@ -178,7 +179,6 @@ public class CardsAgainstHumanity extends JFrame{
         startGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                changePanel(roomPanel, new PlayPanel().getPanel());
                 client.sendStartGame();
             }
         });
@@ -223,6 +223,10 @@ public class CardsAgainstHumanity extends JFrame{
                 client.joinRoom(clientName, rooms.get(index).getId());
             }
         });
+    }
+
+    public void startPlayPanel() {
+        changePanel(roomPanel, new PlayPanel().getPanel());
     }
 
     public void changePanel(JPanel oldPanel, JPanel newPanel){

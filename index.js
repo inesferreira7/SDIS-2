@@ -57,8 +57,8 @@ io.on('connection', function(socket){
       socket.on('startGame', function(){
 
         //console.log("Game Started " + socket.id);
-        if(rooms[socket.room].players.length < MIN_NUM_PLAYERS)
-            return;
+        // if(rooms[socket.room].players.length < MIN_NUM_PLAYERS)
+            // return;
             
         rooms[socket.room].gameStarted = true;
 

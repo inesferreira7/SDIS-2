@@ -154,6 +154,7 @@ public class LoginClient {
                 } catch (SocketException e) {
                     e.printStackTrace();
                 }
+                CardsAgainstHumanity.getInstance().startPlayPanel();
             }
         });
     }

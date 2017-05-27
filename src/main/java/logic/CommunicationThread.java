@@ -1,9 +1,5 @@
 package logic;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-import com.sun.xml.internal.ws.api.model.MEP;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -17,9 +13,11 @@ public class CommunicationThread extends Thread{
 
     private GameLogic logic;
     private Player me;
+    private DatagramSocket socket;
 
-    public CommunicationThread(GameLogic logic, Player me) {
+    public CommunicationThread(GameLogic logic, DatagramSocket socket, Player me) {
         this.logic = logic;
+        this.socket = socket;
         this.me = me;
     }
 
@@ -30,7 +28,7 @@ public class CommunicationThread extends Thread{
 
                 // receive request
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
-                me.getSocket().receive(packet);
+                socket.receive(packet);
 
                 // figure out response
                 String cmd = new String(packet.getData(), 0, packet.getLength());
@@ -40,7 +38,7 @@ public class CommunicationThread extends Thread{
                 InetAddress address = packet.getAddress();
                 int port = packet.getPort();
                 packet = new DatagramPacket(buf, buf.length, address, port);
-                me.getSocket().send(packet);
+                socket.send(packet);
             } catch (IOException e) {
                 e.printStackTrace();
             }
