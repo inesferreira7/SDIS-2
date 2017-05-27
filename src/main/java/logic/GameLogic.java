@@ -154,7 +154,7 @@ public class GameLogic {
             DatagramSocket tempSocket = new DatagramSocket();
             for (Player p:
                     players) {
-//                if(!p.equals(me)) { TODO: Check if can send message to himself
+                if(!p.equals(me)) { 
 
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append(MessageType.RETRIEVEWHITECARD.name());
@@ -176,7 +176,7 @@ public class GameLogic {
                     DatagramPacket packet = new DatagramPacket(buf, buf.length, p.getIp(), LoginClient.SOCKET_PORT);
 //                System.out.println(packet.getLength());
                     tempSocket.send(packet);
-//                }
+                }
             }
             tempSocket.close();
         } catch (IOException e) {
