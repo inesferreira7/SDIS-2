@@ -1,7 +1,6 @@
 package logic;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.net.*;
 import java.util.ArrayList;
 
@@ -76,6 +75,14 @@ public class Player implements Serializable{
 
     public InetAddress getIp() {
         return ip;
+    }
+
+    public WhiteCard getCardWithText(String text){
+        for (WhiteCard c:
+             cards) {
+            if(c.getText().equals(text)) return c;
+        }
+        return null;
     }
 
     @Override

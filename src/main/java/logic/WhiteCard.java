@@ -22,7 +22,7 @@ public class WhiteCard extends Card {
     @Override
     public String toString() {
         return "WhiteCard{text=" + text + ", " +
-                "owner=" + owner +
+//                "owner= id: " + owner.getId() + ", name: " + owner.getName() +
                 '}';
     }
 }

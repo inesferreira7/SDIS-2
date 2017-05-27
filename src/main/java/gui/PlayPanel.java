@@ -51,7 +51,7 @@ public class PlayPanel extends JFrame {
                     }
                 } else {
                     if (mouseEvent.getClickCount() >= 2) {
-                        selectedCards.add(new WhiteCard(clickedCard.getText(), null));
+                        selectedCards.add(logic.getMe().getCardWithText(clickedCard.getText()));
                         logic.playerPickedCard(selectedCards);
                         selectedCards = new ArrayList<>();
                     }
@@ -161,7 +161,7 @@ public class PlayPanel extends JFrame {
 
     private void selectCard(JTextArea area) {
         area.setBorder(selectedBorder);
-        selectedCards.add(new WhiteCard(area.getText(), null));
+        selectedCards.add(GameLogic.getInstance().getMe().getCardWithText(area.getText()));
         noSelectedCards++;
     }
 
