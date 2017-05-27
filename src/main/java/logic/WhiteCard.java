@@ -3,7 +3,7 @@ package logic;
 /**
  * Created by chrx on 5/25/17.
  */
-public class WhiteCard extends Card{
+public class WhiteCard extends Card {
 
     private Player owner;
 
@@ -14,5 +14,12 @@ public class WhiteCard extends Card{
 
     public Player getOwner(){
         return owner;
+    }
+
+    @Override
+    public String toString() {
+        return "WhiteCard{text=" + text + ", " +
+                "owner=" + owner +
+                '}';
     }
 }
