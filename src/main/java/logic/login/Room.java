@@ -64,6 +64,7 @@ public class Room{
     }
 
     public void setPlayers(JSONArray playersArray, boolean detailed) {
+        this.players = new ArrayList<>();
         for(int i = 0; i < playersArray.length(); i++){
             try {
                 JSONObject player = (JSONObject) (playersArray.get(i));
@@ -123,5 +124,9 @@ public class Room{
                 ", players=" + players +
                 ", numPlayers=" + numPlayers +
                 '}';
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
     }
 }

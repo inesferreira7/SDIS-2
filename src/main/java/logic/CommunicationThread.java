@@ -15,10 +15,9 @@ public class CommunicationThread extends Thread{
     private Player me;
     private DatagramSocket socket;
 
-    public CommunicationThread(GameLogic logic, DatagramSocket socket, Player me) {
+    public CommunicationThread(GameLogic logic, DatagramSocket socket) {
         this.logic = logic;
         this.socket = socket;
-        this.me = me;
     }
 
     public void run() {

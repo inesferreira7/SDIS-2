@@ -226,7 +226,7 @@ public class CardsAgainstHumanity extends JFrame{
     }
 
     public void startPlayPanel() {
-        changePanel(roomPanel, new PlayPanel().getPanel());
+        changePanel(roomPanel, PlayPanel.getInstance().getPanel());
     }
 
     public void changePanel(JPanel oldPanel, JPanel newPanel){

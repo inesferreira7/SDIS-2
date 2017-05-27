@@ -21,6 +21,8 @@ public class GameLogic {
     private Stack<BlackCard> blackCardsdeck;
     private int czar;
 
+    private Player me;
+
     /*test variables*/
     public static final int MIN_NUM_PLAYERS = 3, MAX_NUM_PLAYERS = 6;
     public static final int PLAYERS_PICKING = 0, PICK_WINNER = 1, END_ROUND = 2;
@@ -123,6 +125,13 @@ public class GameLogic {
         addWhiteCardToBoard(whiteCard);
     }*/
 
+    public Player getMe() {
+        return me;
+    }
+
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
+    }
 
     public void selectWinner(WhiteCard winnerCard){
         winnerCard.getOwner().addPoints(1);
@@ -131,5 +140,9 @@ public class GameLogic {
 
     public void endRound(){
         clearBoard();
+    }
+
+    public void setMe(Player me) {
+        this.me = me;
     }
 }
