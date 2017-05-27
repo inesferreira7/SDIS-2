@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,6 +22,8 @@ import java.util.Iterator;
  * Created by ines on 25-05-2017.
  */
 public class LoginClient {
+
+    private final int SOCKET_PORT = 4123;
 
     private ArrayList<Room> rooms;
     private Socket socket;
@@ -145,7 +149,11 @@ public class LoginClient {
                 JSONArray data = (JSONArray) objects[0];
 
                 getMyRoom().setPlayers(data, true);
-                new CommunicationThread(GameLogic.getInstance(), me).run();
+                try {
+                    new CommunicationThread(GameLogic.getInstance(), new DatagramSocket(SOCKET_PORT), me).run();
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
