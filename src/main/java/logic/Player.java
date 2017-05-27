@@ -24,6 +24,7 @@ public class Player{
     public void setIp(String ip) {
         try {
             this.ip = InetAddress.getByName(ip);
+            System.out.println(this.ip);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

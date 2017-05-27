@@ -67,6 +67,7 @@ public class Room{
         for(int i = 0; i < playersArray.length(); i++){
             try {
                 JSONObject player = (JSONObject) (playersArray.get(i));
+                System.out.println(player);
                 String id = player.getString("id");
                 String name = player.getString("name");
 

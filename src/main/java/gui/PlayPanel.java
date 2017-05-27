@@ -69,6 +69,7 @@ public class PlayPanel extends JFrame {
                         byte[] buf = "Gay".getBytes();
                         for (Player p : logic.getPlayers()) {
                             if(!p.equals(logic.getMe())){
+                                System.out.println(p.getIp());
                                 DatagramPacket dp = new DatagramPacket(buf, buf.length, p.getIp(), LoginClient.SOCKET_PORT);
                                 socket.send(dp);
                             }
