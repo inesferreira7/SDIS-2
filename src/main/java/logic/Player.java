@@ -1,16 +1,17 @@
 package logic;
 
+import java.io.Serializable;
 import java.net.*;
 import java.util.ArrayList;
 
-public class Player{
+public class Player implements Serializable{
 
     private String id;
     private String name;
-    private ArrayList<WhiteCard> cards;
-    private int position;
-    private int points;
-    private InetAddress ip;
+    private transient ArrayList<WhiteCard> cards;
+    private transient int position;
+    private transient int points;
+    private transient InetAddress ip;
 
     public Player(String id, String name){
         this.id=id;
@@ -79,5 +80,16 @@ public class Player{
         return id.equals(player.id);
     }
 
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", cards=" + cards +
+                ", position=" + position +
+                ", points=" + points +
+                ", ip=" + ip +
+                '}';
+    }
 }
 
