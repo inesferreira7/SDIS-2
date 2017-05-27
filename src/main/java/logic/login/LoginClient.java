@@ -21,8 +21,6 @@ import java.util.Iterator;
  */
 public class LoginClient {
 
-    private final String myIP = "172.30.27.172";
-
     private ArrayList<Room> rooms;
     private Socket socket;
     private Player me;
@@ -185,7 +183,7 @@ public class LoginClient {
         try {
             json.put("name", name);
             json.put("room", roomName);
-            json.put("ip", myIP);
+            json.put("ip", IPGetter.getIP());
         } catch (JSONException e) {
             e.printStackTrace();
         }
