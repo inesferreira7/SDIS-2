@@ -95,7 +95,6 @@ public class EndPanel extends JFrame {
         leftPanel.add(picLabel, BorderLayout.CENTER);
 
         this.add(panel);
-        this.setVisible(true);
 
     }
 

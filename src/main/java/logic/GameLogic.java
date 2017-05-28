@@ -28,6 +28,7 @@ public class GameLogic {
     private Player me;
 
     /*test variables*/
+    private final int POINTS_TO_END = 5;
     public static final int MIN_NUM_PLAYERS = 1, MAX_NUM_PLAYERS = 6;
     public static final int PLAYERS_PICKING = 0, PICK_WINNER = 1, END_ROUND = 2;
     public static final String[] lastMessage = {"NEWCZAR", "BLACKCARD", "PICKINGCARDS", "ELECTBEST", "RETRIEVECARD"};
@@ -193,7 +194,7 @@ public class GameLogic {
         }
         else if(gameState == END_ROUND) {
             for(int i = 0; i < players.size(); i++){
-                if(players.get(i).getPoints() >= 5){
+                if(players.get(i).getPoints() >= POINTS_TO_END){
                     CardsAgainstHumanity.getInstance().changePanel(PlayPanel.getInstance().getPanel(), EndPanel.getInstance(players).getPanel());
                 }
             }
