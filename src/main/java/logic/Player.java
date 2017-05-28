@@ -63,7 +63,7 @@ public class Player implements Serializable{
     }
 
     public void addPoints(int points) {
-        this.points =+ points;
+        this.points += points;
     }
 
     public void removeCards(ArrayList<WhiteCard> toRemoveCards){
