@@ -139,7 +139,7 @@ public class PlayPanel extends JFrame {
     }
 
     public void initializeScores(){
-        scores = new JEditorPane("text/html", "");
+        scores = new JEditorPane("text/html", "<p><style color=white>");
         scores.setBackground(Color.black);
         scores.setForeground(Color.white);
         scores.setFont(new Font("Georgia", Font.BOLD, 14));
@@ -182,7 +182,6 @@ public class PlayPanel extends JFrame {
         card.setHighlighter(null);
         card.setBackground(Color.black);
         card.setForeground(Color.WHITE);
-        card.addMouseListener(handCardListener);
         if (text.isEmpty())
             card.setBackground(Color.darkGray);
         
@@ -231,13 +230,14 @@ public class PlayPanel extends JFrame {
         }
 
         StringBuilder sb = new StringBuilder(512);
-        sb.append("Points:\n\n");
+        sb.append("<p><style color=white>Points:<br><br>");
         for(i = 0; i < GameLogic.getInstance().getPlayers().size(); i++){
             sb.append(GameLogic.getInstance().getPlayers().get(i).getName());
             sb.append(": ");
             sb.append(GameLogic.getInstance().getPlayers().get(i).getPoints());
-            sb.append("\n");
+            sb.append("<br>");
         }
+        sb.append("</p>");
 
         scores.setText(sb.toString());
 
