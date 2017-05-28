@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by Joao on 28/05/2017.
@@ -22,26 +24,51 @@ public class EndPanel extends JFrame {
     private JPanel panel;
     private JPanel leftPanel;
     private JPanel rightPanel;
+    private JTextArea winner;
+    private JTextArea points;
 
-    public EndPanel(){
+
+    public EndPanel(ArrayList<Player> players){
         this.setSize(800,550);
 
-        panel = new JPanel(new BorderLayout());
-        leftPanel = new JPanel(new BorderLayout());
-        rightPanel = new JPanel();
-        rightPanel.setLayout(new GridLayout(3, 2, 20, 20));
+        this.players = players;
+        Collections.sort(players, new Comparator<Player>() {
+            @Override
+            public int compare(Player o1, Player o2) {
+                return o1.getPoints() - o2.getPoints();
+            }
+        });
 
-        JTextArea winner = new JTextArea("WINNER:\n    player1");
+        String winner_name = players.get(players.size() - 1).getName();
+
+        winner = new JTextArea("WINNER:\n    " + winner_name);
         winner.setEditable(false);
         winner.setFont(new Font("Georgia", Font.BOLD, 18));
         winner.setBackground(Color.black);
         winner.setForeground(Color.white);
 
-        JTextArea points = new JTextArea("Points:\n\nplayer1: 5\nplayer2: 4\nplayer3: 4\nplayer4: 3\nplayer5: 1\nplayer6: 0\n");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Points: \n\n");
+        for(int i = players.size() - 1; i >=0; i--){
+            sb.append(players.size() - i + 1);
+            sb.append(". ");
+            sb.append(players.get(i).getName());
+            sb.append(":   ");
+            sb.append(players.get(i).getPoints());
+            sb.append("\n");
+        }
+
+        points = new JTextArea(sb.toString());
         points.setEditable(false);
-        points.setFont(new Font("Georgia", Font.BOLD, 14));
+        points.setFont(new Font("Georgia", Font.PLAIN, 16));
         points.setBackground(Color.black);
         points.setForeground(Color.white);
+
+
+        panel = new JPanel(new BorderLayout());
+        leftPanel = new JPanel(new BorderLayout());
+        rightPanel = new JPanel();
+        rightPanel.setLayout(new GridLayout(3, 2, 10, 10));
 
         rightPanel.add(new JLabel(""));
         rightPanel.add(new JLabel(""));
@@ -72,22 +99,18 @@ public class EndPanel extends JFrame {
 
     }
 
-
-    public void setPlayers(ArrayList<Player> players) {
-        this.players = players;
-    }
-
     public JPanel getPanel() {
         return panel;
     }
 
-    public static EndPanel getInstance() {
+    public static EndPanel getInstance(ArrayList<Player> players) {
         if (instance == null)
-            instance = new EndPanel();
+            instance = new EndPanel(players);
         return instance;
     }
 
+
     public static void main(String[] args){
-        EndPanel.getInstance().setVisible(true);
+        //EndPanel.getInstance(p).setVisible(true);
     }
 }

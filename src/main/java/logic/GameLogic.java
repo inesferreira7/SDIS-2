@@ -194,7 +194,7 @@ public class GameLogic {
         else if(gameState == END_ROUND) {
             for(int i = 0; i < players.size(); i++){
                 if(players.get(i).getPoints() >= 5){
-                    CardsAgainstHumanity.getInstance().changePanel(PlayPanel.getInstance().getPanel(), EndPanel.getInstance().getPanel());
+                    CardsAgainstHumanity.getInstance().changePanel(PlayPanel.getInstance().getPanel(), EndPanel.getInstance(players).getPanel());
                 }
             }
             if(players.indexOf(me) == getLeaderIndex()) {
