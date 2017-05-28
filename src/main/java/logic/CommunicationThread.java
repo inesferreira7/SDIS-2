@@ -16,12 +16,19 @@ public class CommunicationThread extends Thread {
     private GameLogic logic;
     private DatagramSocket socket;
 
+    private static CommunicationThread instance = null;
+
     private HashSet<String> receivedCommands;
+
+    public static CommunicationThread getInstance() {
+        return instance;
+    }
 
     public CommunicationThread(GameLogic logic, DatagramSocket socket) {
         this.logic = logic;
         this.socket = socket;
         this.receivedCommands = new HashSet<String>();
+        instance = this;
     }
 
     public void run() {
@@ -50,7 +57,7 @@ public class CommunicationThread extends Thread {
 //        socket.close();
     }
 
-    private String processCommand(String cmd) {
+    public String processCommand(String cmd) {
         String[] cmdSplit = cmd.split(" ");
         if(receivedCommands.contains(cmd))
             return MessageType.ACK.name() + " " + cmdSplit[0];

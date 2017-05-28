@@ -234,6 +234,8 @@ public class GameLogic {
 
     public void broadcastMessage(String message, ArrayList<Player> playersList) {
         ArrayList<Player> missingACK = new ArrayList<>(playersList);
+        missingACK.remove(me);
+        CommunicationThread.getInstance().processCommand(message);
         ArrayList<Thread> threads = new ArrayList<>();
         int noTriesLeft = 3;
         try {
