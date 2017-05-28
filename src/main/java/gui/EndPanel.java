@@ -39,7 +39,7 @@ public class EndPanel extends JFrame {
             }
         });
 
-        String winner_name = players.get(players.size() - 1).getName();
+        String winner_name = players.get(0).getName();
 
         winner = new JTextArea("WINNER:\n    " + winner_name);
         winner.setEditable(false);
