@@ -96,6 +96,7 @@ public class EndPanel extends JFrame {
 
         this.add(panel);
 
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public JPanel getPanel() {
