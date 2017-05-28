@@ -154,34 +154,81 @@ public class GameLogic {
         PlayPanel.getInstance().refreshInterface();
     }
 
+    public String createRetrieveWhiteCardMessage() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(MessageType.RETRIEVEWHITECARD.name());
+        stringBuilder.append(" ");
+
+        ArrayList<WhiteCard> cards = new ArrayList<>();
+        int numCards;
+
+        if (blackCard != null) numCards = blackCard.getPick();
+        else numCards = WHITECARDS_PER_PLAYER;
+
+        for (int i = 0; i < numCards; i++)
+            cards.add(whiteCardsDeck.pop());
+        stringBuilder.append(Integer.toString(cards.size()));
+
+        for (WhiteCard c : cards) {
+            stringBuilder.append(" ");
+            stringBuilder.append(c.toSerializedString());
+        }
+
+        return stringBuilder.toString();
+    }
+
     public void sendWhiteCards() {
+        ArrayList<Player> missingACK = new ArrayList<>(players);
+        missingACK.remove(me);
+        CommunicationThread.getInstance().processCommand(createRetrieveWhiteCardMessage());
+        HashMap<Player, String> messagesToSend = new HashMap<>();
+        for (Player p : missingACK) {
+            messagesToSend.put(p, createRetrieveWhiteCardMessage());
+        }
+
+        ArrayList<Thread> threads = new ArrayList<>();
+        int noTriesLeft = 3;
         try {
-            DatagramSocket tempSocket = new DatagramSocket();
-            for (Player p :
-                    players) {
+            while(noTriesLeft > 0 && !missingACK.isEmpty()) {
+                DatagramSocket tempSocket = new DatagramSocket();
+                tempSocket.setSoTimeout(3000);
+                for (Iterator<Player> playerIt = missingACK.iterator(); playerIt.hasNext(); ) {
+                    Player p = playerIt.next();
+                    byte[] buf = messagesToSend.get(p).getBytes();
+                    System.out.println("Sending message to " + p);
 
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(MessageType.RETRIEVEWHITECARD.name());
-                stringBuilder.append(" ");
-                ArrayList<WhiteCard> cards = new ArrayList<>();
-                int numCards;
-                if (blackCard != null) numCards = blackCard.getPick();
-                else numCards = WHITECARDS_PER_PLAYER;
-                for (int i = 0; i < numCards; i++)
-                    cards.add(whiteCardsDeck.pop());
-                stringBuilder.append(Integer.toString(cards.size()));
-                for (WhiteCard c : cards) {
-                    stringBuilder.append(" ");
-                    stringBuilder.append(c.toSerializedString());
+                    DatagramPacket packet = new DatagramPacket(buf, buf.length, p.getIp(), LoginClient.SOCKET_PORT);
+                    tempSocket.send(packet);
+
+                    Thread t = new Thread(() -> {
+                        try {
+                            byte[] receiveBuffer = new byte[256];
+                            DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
+                            tempSocket.receive(receivePacket);
+
+                            // TODO: check ACK
+                            InetAddress ackAddress = receivePacket.getAddress();
+                            for (Iterator<Player> it = missingACK.iterator(); it.hasNext(); ) {
+                                Player player = it.next();
+                                if (player.getIp().equals(ackAddress)) {
+                                    System.out.println("Received ACK from " + player);
+                                    it.remove();
+                                }
+                            }
+                        } catch (SocketTimeoutException e) {
+//                                    e.printStackTrace();
+                            System.out.println("Socket timed out");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    t.start();
+                    threads.add(t);
                 }
-
-                String cmd = stringBuilder.toString();
-                byte[] buf = cmd.getBytes();
-                DatagramPacket packet = new DatagramPacket(buf, buf.length, p.getIp(), LoginClient.SOCKET_PORT);
-                tempSocket.send(packet);
+                for (Thread t : threads) t.join();
+                noTriesLeft--;
             }
-            tempSocket.close();
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -236,13 +283,14 @@ public class GameLogic {
         ArrayList<Player> missingACK = new ArrayList<>(playersList);
         missingACK.remove(me);
         CommunicationThread.getInstance().processCommand(message);
+
         ArrayList<Thread> threads = new ArrayList<>();
         int noTriesLeft = 3;
         try {
             DatagramSocket tempSocket = new DatagramSocket();
             tempSocket.setSoTimeout(3000);
             while (noTriesLeft > 0 && !missingACK.isEmpty()) {
-                for (Iterator<Player> playerIt = missingACK.iterator(); playerIt.hasNext();) {
+                for (Iterator<Player> playerIt = missingACK.iterator(); playerIt.hasNext(); ) {
                     Player p = playerIt.next();
 
                     byte[] buf = message.getBytes();
@@ -257,7 +305,7 @@ public class GameLogic {
 
                             // TODO: check ACK
                             InetAddress ackAddress = receivePacket.getAddress();
-                            for (Iterator<Player> it = missingACK.iterator(); it.hasNext();) {
+                            for (Iterator<Player> it = missingACK.iterator(); it.hasNext(); ) {
                                 Player player = it.next();
                                 if (player.getIp().equals(ackAddress)) {
                                     System.out.println("Received ACK from " + player);
@@ -274,13 +322,13 @@ public class GameLogic {
                     t.start();
                     threads.add(t);
                 }
-                for(Thread t : threads) t.join();
+                for (Thread t : threads) t.join();
                 noTriesLeft--;
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        if(missingACK.size() > 0)
+        if (missingACK.size() > 0)
             System.err.println("NOT ALL PLAYERS SENT ACK");
     }
 

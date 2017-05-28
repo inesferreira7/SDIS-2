@@ -161,7 +161,6 @@ public class LoginClient {
 
                 if(GameLogic.getInstance().getPlayers().get(GameLogic.getInstance().getLeaderIndex()).equals(me)) {
                     GameLogic.getInstance().sendWhiteCards();
-                    GameLogic.getInstance().sendBlackCard();
                 }
             }
         });
