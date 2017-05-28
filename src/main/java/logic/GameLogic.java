@@ -1,5 +1,7 @@
 package logic;
 
+import gui.CardsAgainstHumanity;
+import gui.EndPanel;
 import gui.PlayPanel;
 import logic.login.LoginClient;
 import parser.CardDatabase;
@@ -193,6 +195,11 @@ public class GameLogic {
             //TODO: Update interface - reveal choices
         }
         else if(gameState == END_ROUND) {
+            for(int i = 0; i < players.size(); i++){
+                if(players.get(i).getPoints() >= 5){
+                    CardsAgainstHumanity.getInstance().changePanel(PlayPanel.getInstance().getPanel(), EndPanel.getInstance().getPanel());
+                }
+            }
             if(players.indexOf(me) == getLeaderIndex()) {
                 sendWhiteCards();
             }
