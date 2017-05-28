@@ -29,7 +29,7 @@ public class GameLogic {
     private Player me;
 
     /*test variables*/
-    public static final int MIN_NUM_PLAYERS = 3, MAX_NUM_PLAYERS = 6;
+    public static final int MIN_NUM_PLAYERS = 1, MAX_NUM_PLAYERS = 6;
     public static final int PLAYERS_PICKING = 0, PICK_WINNER = 1, END_ROUND = 2;
     public static final String[] lastMessage = {"NEWCZAR", "BLACKCARD", "PICKINGCARDS", "ELECTBEST", "RETRIEVECARD"};
     private int gameState;
@@ -198,7 +198,6 @@ public class GameLogic {
             }
             blackCard = null;
             whiteCardPicks = new HashMap<>();
-            czar = czar++ % players.size();
             if(players.indexOf(me) == getLeaderIndex())
                 sendBlackCard();
         }
