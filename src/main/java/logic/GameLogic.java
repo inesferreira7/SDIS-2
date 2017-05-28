@@ -16,11 +16,8 @@ import java.util.*;
  * Created by up201404990 on 25-05-2017.
  */
 public class GameLogic {
-    /*test variables*/
-    WhiteCard wCard;
-    Player currentPlayer;
     private ArrayList<Player> players;
-    private HashMap<Player, ArrayList<WhiteCard> > whiteCardPicks;
+    private LinkedHashMap<Player, ArrayList<WhiteCard> > whiteCardPicks;
     private BlackCard blackCard;
     private Stack<WhiteCard> whiteCardsDeck;
     private Stack<BlackCard> blackCardsdeck;
@@ -53,7 +50,7 @@ public class GameLogic {
     private GameLogic(){
         this.gameState = -1;
         players = new ArrayList<>();
-        whiteCardPicks = new HashMap<>();
+        whiteCardPicks = new LinkedHashMap<>();
         whiteCardsDeck = new Stack<>();
         blackCardsdeck = new Stack<>();
         czar = -1;
@@ -189,7 +186,7 @@ public class GameLogic {
     public void setGameState(int gameState) {
         if(gameState == PLAYERS_PICKING) {
             //TODO: Update interface
-            whiteCardPicks = new HashMap<>();
+            whiteCardPicks = new LinkedHashMap<>();
         }
         else if(gameState == PICK_WINNER) {
             //TODO: Update interface - reveal choices
@@ -204,7 +201,7 @@ public class GameLogic {
                 sendWhiteCards();
             }
             blackCard = null;
-            whiteCardPicks = new HashMap<>();
+            whiteCardPicks = new LinkedHashMap<>();
             if(players.indexOf(me) == getLeaderIndex())
                 sendBlackCard();
         }
