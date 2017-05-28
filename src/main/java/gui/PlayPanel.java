@@ -99,21 +99,10 @@ public class PlayPanel extends JFrame {
                 if (mouseEvent.getClickCount() >= 2) {
                     int playerIndex = getComponentIndex(clickedCard) % NUM_COLUMNS -1;
                     Player winner = logic.getPlayerByAnswerOrder(playerIndex);
-
-                    try {
-                        DatagramSocket tempSocket = new DatagramSocket();
                         String cmd = MessageType.WINNERPICK.name() +
                                 " " +
                                 logic.getPlayers().indexOf(winner);
-                        for (Player p :
-                                logic.getPlayers()) {
-                            DatagramPacket packet = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length, p.getIp(), LoginClient.SOCKET_PORT);
-                            tempSocket.send(packet);
-                        }
-                        tempSocket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    GameLogic.getInstance().broadcastMessage(cmd);
                 }
             }
         }
