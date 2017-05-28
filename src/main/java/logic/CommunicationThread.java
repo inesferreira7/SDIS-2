@@ -113,8 +113,6 @@ public class CommunicationThread extends Thread {
 //                System.out.println(logic.getMe());
 
                 logic.prepareNewRound();
-                if(numCards == 5 && logic.getLeaderIndex() == logic.getPlayers().indexOf(logic.getMe()))
-                    logic.sendBlackCard();
                 return MessageType.ACK.name() + " " + MessageType.RETRIEVEWHITECARD.name();
             }
         } else {
