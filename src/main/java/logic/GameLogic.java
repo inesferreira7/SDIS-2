@@ -180,7 +180,7 @@ public class GameLogic {
     public void sendWhiteCards() {
         ArrayList<Player> missingACK = new ArrayList<>(players);
         missingACK.remove(me);
-        CommunicationThread.getInstance().processCommand(createRetrieveWhiteCardMessage());
+
         HashMap<Player, String> messagesToSend = new HashMap<>();
         for (Player p : missingACK) {
             messagesToSend.put(p, createRetrieveWhiteCardMessage());
@@ -231,6 +231,7 @@ public class GameLogic {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+        CommunicationThread.getInstance().processCommand(createRetrieveWhiteCardMessage());
     }
 
     public void sendBlackCard() {
