@@ -84,12 +84,14 @@ public class CommunicationThread extends Thread {
             }
         } else if (cmdSplit[0].equals(MessageType.RETRIEVEWHITECARD.name())) {
             if (cmdSplit.length > 2) {
-                int numCards = Integer.parseInt(cmdSplit[1]);
-                if(cmdSplit.length == 2 + numCards) {
-                    for(int i = 2; i < cmdSplit.length; i++) {
-                        WhiteCard wc = (WhiteCard) Card.getFromSerializedString(cmdSplit[i]);
-                        wc.setOwner(logic.getMe());
-                        logic.getMe().addCard(wc);
+                if(!logic.isCzar(logic.getMe())) {
+                    int numCards = Integer.parseInt(cmdSplit[1]);
+                    if (cmdSplit.length == 2 + numCards) {
+                        for (int i = 2; i < cmdSplit.length; i++) {
+                            WhiteCard wc = (WhiteCard) Card.getFromSerializedString(cmdSplit[i]);
+                            wc.setOwner(logic.getMe());
+                            logic.getMe().addCard(wc);
+                        }
                     }
                 }
 //                System.out.println(logic.getMe());
