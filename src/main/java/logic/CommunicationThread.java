@@ -5,6 +5,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by chrx on 5/26/17.
@@ -14,9 +16,12 @@ public class CommunicationThread extends Thread {
     private GameLogic logic;
     private DatagramSocket socket;
 
+    private HashSet<String> receivedCommands;
+
     public CommunicationThread(GameLogic logic, DatagramSocket socket) {
         this.logic = logic;
         this.socket = socket;
+        this.receivedCommands = new HashSet<String>();
     }
 
     public void run() {
@@ -47,6 +52,9 @@ public class CommunicationThread extends Thread {
 
     private String processCommand(String cmd) {
         String[] cmdSplit = cmd.split(" ");
+        if(receivedCommands.contains(cmd))
+            return MessageType.ACK.name() + " " + cmdSplit[0];
+
         if (cmdSplit[0].equals(MessageType.BLACKCARD.name())) {
             if (cmdSplit.length == 2) {
                 BlackCard bc = (BlackCard) Card.getFromSerializedString(cmdSplit[1]);
