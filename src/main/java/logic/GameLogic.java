@@ -257,12 +257,15 @@ public class GameLogic {
                             DatagramPacket receivePacket = new DatagramPacket(receiveBuffer, receiveBuffer.length);
                             tempSocket.receive(receivePacket);
 
+                            // TODO: check ACK
                             InetAddress ackAddress = receivePacket.getAddress();
-                            for (Player player : missingACK)
+                            for (Iterator<Player> it = missingACK.iterator(); it.hasNext();) {
+                                Player player = it.next();
                                 if (p.getIp().equals(ackAddress)) {
                                     System.out.println("Received ACK from " + player);
-                                    missingACK.remove(player);
+                                    it.remove();
                                 }
+                            }
                         } catch (SocketTimeoutException e) {
 //                                    e.printStackTrace();
                             System.out.println("Socket timed out");
