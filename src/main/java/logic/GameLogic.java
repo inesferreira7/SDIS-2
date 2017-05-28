@@ -12,6 +12,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by up201404990 on 25-05-2017.
@@ -137,8 +138,10 @@ public class GameLogic {
     }
 
     public void setGameState(int gameState) {
+        this.gameState = gameState;
         if (gameState == PLAYERS_PICKING) {
             //TODO: Update interface
+            System.out.println("CZAR IS: " + players.get(czar));
             whiteCardPicks = new LinkedHashMap<>();
         } else if (gameState == PICK_WINNER) {
             //TODO: Update interface - reveal choices
@@ -152,7 +155,7 @@ public class GameLogic {
                 sendWhiteCards();
             }
         }
-        this.gameState = gameState;
+        System.out.println(this.gameState);
         PlayPanel.getInstance().refreshInterface();
     }
 
@@ -182,8 +185,9 @@ public class GameLogic {
     public void sendWhiteCards() {
         ArrayList<Player> missingACK = new ArrayList<>(players);
         missingACK.remove(me);
+        Player[] toRemove = new Player[missingACK.size()];
 
-        HashMap<Player, String> messagesToSend = new HashMap<>();
+        ConcurrentHashMap<Player, String> messagesToSend = new ConcurrentHashMap<>();
         for (Player p : missingACK) {
             messagesToSend.put(p, createRetrieveWhiteCardMessage());
         }
@@ -194,14 +198,14 @@ public class GameLogic {
             while(noTriesLeft > 0 && !missingACK.isEmpty()) {
                 DatagramSocket tempSocket = new DatagramSocket();
                 tempSocket.setSoTimeout(3000);
-                for (Iterator<Player> playerIt = missingACK.iterator(); playerIt.hasNext(); ) {
-                    Player p = playerIt.next();
+                for (int i = 0; i < missingACK.size(); i++) {
+                    Player p = missingACK.get(i);
                     byte[] buf = messagesToSend.get(p).getBytes();
                     System.out.println("Sending message to " + p);
 
                     DatagramPacket packet = new DatagramPacket(buf, buf.length, p.getIp(), LoginClient.SOCKET_PORT);
                     tempSocket.send(packet);
-
+                    int toRemoveIndex = i;
                     Thread t = new Thread(() -> {
                         try {
                             byte[] receiveBuffer = new byte[256];
@@ -210,11 +214,10 @@ public class GameLogic {
 
                             // TODO: check ACK
                             InetAddress ackAddress = receivePacket.getAddress();
-                            for (Iterator<Player> it = missingACK.iterator(); it.hasNext(); ) {
-                                Player player = it.next();
+                            for (Player player : missingACK) {
                                 if (player.getIp().equals(ackAddress)) {
                                     System.out.println("Received ACK from " + player);
-                                    it.remove();
+                                    toRemove[toRemoveIndex] = player;
                                 }
                             }
                         } catch (SocketTimeoutException e) {
@@ -228,6 +231,10 @@ public class GameLogic {
                     threads.add(t);
                 }
                 for (Thread t : threads) t.join();
+                for (Player p:
+                     toRemove) {
+                    missingACK.remove(p);
+                }
                 noTriesLeft--;
             }
         } catch (IOException | InterruptedException e) {
