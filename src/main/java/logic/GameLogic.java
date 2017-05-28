@@ -264,4 +264,12 @@ public class GameLogic {
     public boolean isCzar(Player p) {
         return players.indexOf(p) == czar;
     }
+    public Player getPlayerByAnswerOrder(int i) {
+        int j = 0;
+        for (Map.Entry<Player, ArrayList<WhiteCard>> entry: whiteCardPicks.entrySet()) {
+            if(i == j) return entry.getKey();
+            j++;
+        }
+        return null;
+    }
 }
