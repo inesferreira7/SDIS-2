@@ -29,18 +29,17 @@ public class PlayPanel extends JFrame {
     private static PlayPanel instance = null;
     int noSelectedCards = 0;
     private JPanel panel;
-    private JTextArea scores;
+    private JEditorPane scores;
     private Border selectedBorder = BorderFactory.createMatteBorder(4, 4, 4, 4, Color.black);
     private Border deselectedBorder = null;
     private ArrayList<WhiteCard> selectedCards;
-    private ArrayList<JTextArea> cards;
+    private ArrayList<JEditorPane> cards;
     private MouseListener handCardListener = new MouseListener() {
         @Override
         public void mouseClicked(MouseEvent mouseEvent) {
-
             GameLogic logic = GameLogic.getInstance();
             if (logic.getGameState() == GameLogic.PLAYERS_PICKING && !logic.playerPicked(logic.getMe()) && !logic.isCzar(logic.getMe())) {
-                JTextArea clickedCard = (JTextArea) mouseEvent.getSource();
+                JEditorPane clickedCard = (JEditorPane) mouseEvent.getSource();
                 if (logic.getBlackCard().getPick() > 1) {
                     if (clickedCard.getBorder().equals(selectedBorder))
                         deselectCard(clickedCard);
@@ -88,7 +87,7 @@ public class PlayPanel extends JFrame {
 
             GameLogic logic = GameLogic.getInstance();
             if (logic.getGameState() == GameLogic.PICK_WINNER && logic.isCzar(logic.getMe())) {
-                JTextArea clickedCard = (JTextArea) mouseEvent.getSource();
+                JEditorPane clickedCard = (JEditorPane) mouseEvent.getSource();
                 if (mouseEvent.getClickCount() >= 2) {
                     Player winner = logic.getWhiteCardOwner(new WhiteCard(clickedCard.getText(), null));
 
@@ -140,11 +139,10 @@ public class PlayPanel extends JFrame {
     }
 
     public void initializeScores(){
-        scores = new JTextArea("");
+        scores = new JEditorPane("text/html", "");
         scores.setBackground(Color.black);
         scores.setForeground(Color.white);
         scores.setFont(new Font("Georgia", Font.BOLD, 14));
-        scores.setLineWrap(true);
         scores.setEditable(false);
     }
 
@@ -158,7 +156,7 @@ public class PlayPanel extends JFrame {
         return instance != null;
     }
 
-    private void deselectCard(JTextArea area) {
+    private void deselectCard(JEditorPane area) {
         area.setBorder(deselectedBorder);
         WhiteCard card = new WhiteCard(area.getText(), null);
 
@@ -171,29 +169,29 @@ public class PlayPanel extends JFrame {
         noSelectedCards--;
     }
 
-    private void selectCard(JTextArea area) {
+    private void selectCard(JEditorPane area) {
         area.setBorder(selectedBorder);
         selectedCards.add(GameLogic.getInstance().getMe().getCardWithText(area.getText()));
         noSelectedCards++;
     }
 
-    public JTextArea createBlackCard(String text) {
-        JTextArea card = new JTextArea(text);
+    public JEditorPane createBlackCard(String text) {
+        JEditorPane card = new JEditorPane("text/html", "<span style=color:white;>" + text + "</span>");
 
         card.setEditable(false);
         card.setHighlighter(null);
         card.setBackground(Color.black);
+        card.setForeground(Color.WHITE);
+        card.addMouseListener(handCardListener);
         if (text.isEmpty())
             card.setBackground(Color.darkGray);
-        card.setForeground(Color.white);
-        card.setLineWrap(true);
-
+        
         return card;
     }
 
     public void initializeCards() {
         cards = new ArrayList<>();
-        JTextArea card1 = createBlackCard("Black Card");
+        JEditorPane card1 = createBlackCard("Black Card");
         cards.add(card1);
 
         for (int i = 1; i < NUM_GRID; i++) {
@@ -205,7 +203,6 @@ public class PlayPanel extends JFrame {
     }
 
     public void refreshInterface() {
-        System.out.println("updating interface");
         GameLogic logic = GameLogic.getInstance();
         Component[] components = new Component[NUM_GRID];
 
@@ -255,13 +252,11 @@ public class PlayPanel extends JFrame {
 //        panel.repaint();
     }
 
-    public JTextArea createWhiteCard(String text, MouseListener listener) {
-        JTextArea card = new
-                JTextArea(text);
+    public JEditorPane createWhiteCard(String text, MouseListener listener) {
+        JEditorPane card = new
+                JEditorPane("text/html", text);
         card.setHighlighter(null);
         card.addMouseListener(listener);
-        card.setLineWrap(true);
-        card.setWrapStyleWord(true);
         card.setBackground(Color.white);
         card.setForeground(Color.black);
         card.setFont(new Font("Georgia", Font.BOLD, 14));
