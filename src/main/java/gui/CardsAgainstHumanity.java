@@ -16,7 +16,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by ines on 25-05-2017.
@@ -64,8 +63,6 @@ public class CardsAgainstHumanity extends JFrame{
 
     private CardsAgainstHumanity(){
         this.client = new LoginClient();
-
-
 
         this.setSize(800,550);
 

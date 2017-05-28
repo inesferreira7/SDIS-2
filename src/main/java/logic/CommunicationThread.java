@@ -47,12 +47,7 @@ public class CommunicationThread extends Thread {
 
     private String processCommand(String cmd) {
         String[] cmdSplit = cmd.split(" ");
-        if (cmdSplit[0].equals(MessageType.CZARCHANGE.name())) {
-            if (cmdSplit.length == 2) {
-                logic.changeCzar(Integer.parseInt(cmdSplit[1]));
-                return MessageType.ACK.name() + " " + MessageType.CZARCHANGE.name();
-            }
-        } else if (cmdSplit[0].equals(MessageType.BLACKCARD.name())) {
+        if (cmdSplit[0].equals(MessageType.BLACKCARD.name())) {
             if (cmdSplit.length == 2) {
                 BlackCard bc = (BlackCard) Card.getFromSerializedString(cmdSplit[1]);
                 logic.setBlackCard(bc);
@@ -98,7 +93,7 @@ public class CommunicationThread extends Thread {
                     }
                 }
 //                System.out.println(logic.getMe());
-
+                logic.changeCzar();
                 return MessageType.ACK.name() + " " + MessageType.RETRIEVEWHITECARD.name();
             }
         } else {

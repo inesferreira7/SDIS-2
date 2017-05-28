@@ -54,7 +54,7 @@ public class GameLogic {
         whiteCardPicks = new HashMap<>();
         whiteCardsDeck = new Stack<>();
         blackCardsdeck = new Stack<>();
-        czar = 0;
+        czar = -1;
 
         createDecks();
     }
@@ -93,8 +93,8 @@ public class GameLogic {
         return players;
     }
 
-    public void changeCzar(int previousCzar){
-        czar = czar++ % players.size();
+    public void changeCzar(){
+        czar = (czar + 1) % players.size();
     }
 
     public void setBlackCard(BlackCard b){
@@ -154,7 +154,7 @@ public class GameLogic {
             DatagramSocket tempSocket = new DatagramSocket();
             for (Player p:
                     players) {
-                if(!p.equals(me)) { 
+                if(!isCzar(p)) {
 
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.append(MessageType.RETRIEVEWHITECARD.name());
