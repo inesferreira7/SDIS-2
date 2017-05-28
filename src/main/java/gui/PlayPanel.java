@@ -27,7 +27,7 @@ public class PlayPanel extends JFrame {
     private static final int NUM_GRID = NUM_COLUMNS * NUM_LINES;
     private static final int SCORES_POS = 13;
     private static PlayPanel instance = null;
-    int noSelectedCards = 0;
+    private int noSelectedCards = 0;
     private JPanel panel;
     private JEditorPane scores;
     private Border selectedBorder = BorderFactory.createMatteBorder(4, 4, 4, 4, Color.black);
@@ -38,20 +38,20 @@ public class PlayPanel extends JFrame {
         @Override
         public void mouseClicked(MouseEvent mouseEvent) {
             GameLogic logic = GameLogic.getInstance();
-            if (logic.getGameState() == GameLogic.PLAYERS_PICKING && !logic.playerPicked(logic.getMe()) && !logic.isCzar(logic.getMe())) {
-                JEditorPane clickedCard = (JEditorPane) mouseEvent.getSource();
-                if (logic.getBlackCard().getPick() > 1) {
-                    if (clickedCard.getBorder().equals(selectedBorder))
-                        deselectCard(clickedCard);
-                    else
-                        selectCard(clickedCard);
-                    if (noSelectedCards == logic.getBlackCard().getPick()) {
-                        logic.playerPickedCard(selectedCards);
-                        noSelectedCards = 0;
-                        selectedCards = new ArrayList<>();
-                    }
-                } else {
-                    if (mouseEvent.getClickCount() >= 2) {
+            if (mouseEvent.getClickCount() >= 2) {
+                if (logic.getGameState() == GameLogic.PLAYERS_PICKING && !logic.playerPicked(logic.getMe()) && !logic.isCzar(logic.getMe())) {
+                    JEditorPane clickedCard = (JEditorPane) mouseEvent.getSource();
+                    if (logic.getBlackCard().getPick() > 1) {
+                        if (clickedCard.getBorder().equals(selectedBorder))
+                            deselectCard(clickedCard);
+                        else
+                            selectCard(clickedCard);
+                        if (noSelectedCards == logic.getBlackCard().getPick()) {
+                            logic.playerPickedCard(selectedCards);
+                            noSelectedCards = 0;
+                            selectedCards = new ArrayList<>();
+                        }
+                    } else {
                         selectedCards.add(logic.getMe().getCardWithText(clickedCard.getText()));
                         logic.playerPickedCard(selectedCards);
                         selectedCards = new ArrayList<>();
