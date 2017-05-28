@@ -154,6 +154,7 @@ public class GameLogic {
             }
             if (players.indexOf(me) == getLeaderIndex()) {
                 sendWhiteCards();
+                sendBlackCard();
             }
             this.gameState = PLAYERS_PICKING;
         }
@@ -366,7 +367,5 @@ public class GameLogic {
         roundNr++;
         blackCard = null;
         whiteCardPicks = new LinkedHashMap<>();
-        if (players.indexOf(me) == getLeaderIndex())
-            sendBlackCard();
     }
 }
