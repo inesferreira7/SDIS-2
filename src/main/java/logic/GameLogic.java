@@ -139,6 +139,7 @@ public class GameLogic {
 
     public void setGameState(int gameState) {
         this.gameState = gameState;
+        System.out.println(this.gameState);
         if (gameState == PLAYERS_PICKING) {
             //TODO: Update interface
             System.out.println("CZAR IS: " + players.get(czar));
@@ -154,8 +155,8 @@ public class GameLogic {
             if (players.indexOf(me) == getLeaderIndex()) {
                 sendWhiteCards();
             }
+            this.gameState = PLAYERS_PICKING;
         }
-        System.out.println(this.gameState);
         PlayPanel.getInstance().refreshInterface();
     }
 
