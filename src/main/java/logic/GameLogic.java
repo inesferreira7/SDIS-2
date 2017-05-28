@@ -154,8 +154,8 @@ public class GameLogic {
             if (players.indexOf(me) == getLeaderIndex())
                 sendBlackCard();
         }
-        PlayPanel.getInstance().refreshInterface();
         this.gameState = gameState;
+        PlayPanel.getInstance().refreshInterface();
     }
 
     public void sendWhiteCards() {

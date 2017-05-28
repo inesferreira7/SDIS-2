@@ -26,10 +26,12 @@ public class PlayPanel extends JFrame {
     private static final int NUM_COLUMNS = 7;
     private static final int NUM_GRID = NUM_COLUMNS * NUM_LINES;
     private static final int SCORES_POS = 13;
+    private static final int GAME_STATE_POS = 6;
     private static PlayPanel instance = null;
     private int noSelectedCards = 0;
     private JPanel panel;
     private JEditorPane scores;
+    private JTextArea state;
     private Border selectedBorder = BorderFactory.createMatteBorder(4, 4, 4, 4, Color.black);
     private Border deselectedBorder = null;
     private ArrayList<WhiteCard> selectedCards;
@@ -132,16 +134,23 @@ public class PlayPanel extends JFrame {
         selectedCards = new ArrayList<>();
         initializeCards();
         initializePanel();
-        initializeScores();
+        initializeScores_and_State();
         refreshInterface();
     }
 
-    public void initializeScores(){
+    public void initializeScores_and_State(){
         scores = new JEditorPane("text/html", "Scores");
         scores.setBackground(Color.black);
         scores.setForeground(Color.white);
         scores.setFont(new Font("Georgia", Font.BOLD, 14));
         scores.setEditable(false);
+        state = new JTextArea("");
+        state.setBackground(Color.darkGray);
+        state.setForeground(Color.white);
+        state.setFont(new Font("Georgia", Font.BOLD, 14));
+        state.setLineWrap(true);
+        state.setWrapStyleWord(true);
+        state.setEditable(false);
     }
 
     public static PlayPanel getInstance() {
@@ -242,10 +251,28 @@ public class PlayPanel extends JFrame {
 
         scores.setText(sb.toString());
 
+        if(logic.getGameState() == logic.PLAYERS_PICKING){
+            if(logic.isCzar(logic.getMe())){
+                state.setText("You are the czar. Wait for all players to pick");
+            }
+            else
+                state.setText("Pick your cards");
+        }
+        else if(logic.getGameState() == logic.PICK_WINNER){
+            if(logic.isCzar(logic.getMe())){
+                state.setText("You are the czar. Pick the winner card");
+            }
+            else
+                state.setText("Waiting for czar to pick winner card");
+        }
+
+
         panel.removeAll();
         for (i = 0; i < components.length; i++){
             if(i == SCORES_POS)
                 panel.add(scores);
+            else if(i == GAME_STATE_POS)
+                panel.add(state);
             else
                 panel.add(components[i]);
         }
