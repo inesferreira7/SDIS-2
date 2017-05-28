@@ -100,8 +100,8 @@ public class CommunicationThread extends Thread {
             }
         } else if (cmdSplit[0].equals(MessageType.RETRIEVEWHITECARD.name())) {
             if (cmdSplit.length > 2) {
+                int numCards = Integer.parseInt(cmdSplit[1]);
                 if(!logic.isCzar(logic.getMe())) {
-                    int numCards = Integer.parseInt(cmdSplit[1]);
                     if (cmdSplit.length == 2 + numCards) {
                         for (int i = 2; i < cmdSplit.length; i++) {
                             WhiteCard wc = (WhiteCard) Card.getFromSerializedString(cmdSplit[i]);
@@ -113,6 +113,8 @@ public class CommunicationThread extends Thread {
 //                System.out.println(logic.getMe());
 
                 logic.prepareNewRound();
+                if(numCards == 5 && logic.getLeaderIndex() == logic.getPlayers().indexOf(logic.getMe()))
+                    logic.sendBlackCard();
                 return MessageType.ACK.name() + " " + MessageType.RETRIEVEWHITECARD.name();
             }
         } else {
