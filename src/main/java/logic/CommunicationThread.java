@@ -5,8 +5,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by chrx on 5/26/17.
@@ -81,11 +79,7 @@ public class CommunicationThread extends Thread {
         } else if (cmdSplit[0].equals(MessageType.WINNERPICK.name())) {
             if (cmdSplit.length == 2) {
                 logic.getPlayers().get(Integer.parseInt(cmdSplit[1])).addPoints(1);
-                Executors.newSingleThreadScheduledExecutor().schedule(
-                        () -> {
-                            logic.setGameState(GameLogic.END_ROUND);
-                        }, 6000, TimeUnit.MILLISECONDS
-                );
+                logic.setGameState(GameLogic.END_ROUND);
                 return MessageType.ACK.name() + " " + MessageType.WINNERPICK.name();
             }
         } else if (cmdSplit[0].equals(MessageType.RETRIEVEWHITECARD.name())) {
@@ -101,7 +95,8 @@ public class CommunicationThread extends Thread {
                     }
                 }
 //                System.out.println(logic.getMe());
-                logic.changeCzar();
+
+                logic.prepareNewRound();
                 return MessageType.ACK.name() + " " + MessageType.RETRIEVEWHITECARD.name();
             }
         } else {

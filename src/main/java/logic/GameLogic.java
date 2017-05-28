@@ -149,10 +149,6 @@ public class GameLogic {
             if (players.indexOf(me) == getLeaderIndex()) {
                 sendWhiteCards();
             }
-            blackCard = null;
-            whiteCardPicks = new LinkedHashMap<>();
-            if (players.indexOf(me) == getLeaderIndex())
-                sendBlackCard();
         }
         this.gameState = gameState;
         PlayPanel.getInstance().refreshInterface();
@@ -244,8 +240,8 @@ public class GameLogic {
             DatagramSocket tempSocket = new DatagramSocket();
             tempSocket.setSoTimeout(3000);
             while (noTriesLeft > 0 && !missingACK.isEmpty()) {
-                for (Player p :
-                        missingACK) {
+                for (Iterator<Player> playerIt = missingACK.iterator(); playerIt.hasNext();) {
+                    Player p = playerIt.next();
 
                     byte[] buf = message.getBytes();
 
@@ -297,5 +293,13 @@ public class GameLogic {
             j++;
         }
         return null;
+    }
+
+    public void prepareNewRound() {
+        changeCzar();
+        blackCard = null;
+        whiteCardPicks = new LinkedHashMap<>();
+        if (players.indexOf(me) == getLeaderIndex())
+            sendBlackCard();
     }
 }
