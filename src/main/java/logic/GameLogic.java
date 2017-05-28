@@ -22,7 +22,7 @@ public class GameLogic {
     public static final String[] lastMessage = {"NEWCZAR", "BLACKCARD", "PICKINGCARDS", "ELECTBEST", "RETRIEVECARD"};
     public static final int WHITECARDS_PER_PLAYER = 5;
     private static GameLogic instance = null;
-    
+
     private final int POINTS_TO_END = 5;
     private ArrayList<Player> players;
     private LinkedHashMap<Player, ArrayList<WhiteCard>> whiteCardPicks;
@@ -257,7 +257,7 @@ public class GameLogic {
                             InetAddress ackAddress = receivePacket.getAddress();
                             for (Iterator<Player> it = missingACK.iterator(); it.hasNext();) {
                                 Player player = it.next();
-                                if (p.getIp().equals(ackAddress)) {
+                                if (player.getIp().equals(ackAddress)) {
                                     System.out.println("Received ACK from " + player);
                                     it.remove();
                                 }
