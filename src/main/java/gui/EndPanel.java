@@ -35,7 +35,7 @@ public class EndPanel extends JFrame {
         Collections.sort(players, new Comparator<Player>() {
             @Override
             public int compare(Player o1, Player o2) {
-                return o1.getPoints() - o2.getPoints();
+                return o2.getPoints() - o1.getPoints();
             }
         });
 
@@ -49,8 +49,8 @@ public class EndPanel extends JFrame {
 
         StringBuilder sb = new StringBuilder();
         sb.append("Points: \n\n");
-        for(int i = players.size() - 1; i >=0; i--){
-            sb.append(players.size() - i + 1);
+        for(int i = 0; i < players.size(); i++){
+            sb.append(i + 1);
             sb.append(". ");
             sb.append(players.get(i).getName());
             sb.append(":   ");
