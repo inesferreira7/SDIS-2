@@ -52,7 +52,8 @@ public class PlayPanel extends JFrame {
                             selectedCards = new ArrayList<>();
                         }
                     } else {
-                        selectedCards.add(logic.getMe().getCardWithText(clickedCard.getText()));
+                        int cardIndex = getComponentIndex(clickedCard) % NUM_COLUMNS - 1;
+                        selectedCards.add(logic.getMe().getCards().get(cardIndex));
                         logic.playerPickedCard(selectedCards);
                         selectedCards = new ArrayList<>();
                     }
@@ -81,6 +82,13 @@ public class PlayPanel extends JFrame {
         }
     };
 
+    public int getComponentIndex(Component c) {
+        Component[] components = panel.getComponents();
+        for (int i = 0; i < components.length; i++)
+            if(c.equals(components[i])) return i;
+        return -1;
+    }
+
     private MouseListener toPickCardListener = new MouseListener() {
         @Override
         public void mouseClicked(MouseEvent mouseEvent) {
@@ -89,7 +97,8 @@ public class PlayPanel extends JFrame {
             if (logic.getGameState() == GameLogic.PICK_WINNER && logic.isCzar(logic.getMe())) {
                 JEditorPane clickedCard = (JEditorPane) mouseEvent.getSource();
                 if (mouseEvent.getClickCount() >= 2) {
-                    Player winner = logic.getWhiteCardOwner(new WhiteCard(clickedCard.getText(), null));
+                    int playerIndex = getComponentIndex(clickedCard) % NUM_COLUMNS -1;
+                    Player winner = logic.getPlayerByAnswerOrder(playerIndex);
 
                     try {
                         DatagramSocket tempSocket = new DatagramSocket();
@@ -139,7 +148,7 @@ public class PlayPanel extends JFrame {
     }
 
     public void initializeScores(){
-        scores = new JEditorPane("text/html", "<p><style color=white>");
+        scores = new JEditorPane("text/html", "Scores");
         scores.setBackground(Color.black);
         scores.setForeground(Color.white);
         scores.setFont(new Font("Georgia", Font.BOLD, 14));
@@ -158,7 +167,9 @@ public class PlayPanel extends JFrame {
 
     private void deselectCard(JEditorPane area) {
         area.setBorder(deselectedBorder);
-        WhiteCard card = new WhiteCard(area.getText(), null);
+
+        int cardIndex = getComponentIndex(area) % NUM_COLUMNS - 1;
+        WhiteCard card = GameLogic.getInstance().getMe().getCards().get(cardIndex);
 
         int index = selectedCards.indexOf(card);
 
@@ -171,7 +182,8 @@ public class PlayPanel extends JFrame {
 
     private void selectCard(JEditorPane area) {
         area.setBorder(selectedBorder);
-        selectedCards.add(GameLogic.getInstance().getMe().getCardWithText(area.getText()));
+        int cardIndex = getComponentIndex(area) % NUM_COLUMNS - 1;
+        selectedCards.add(GameLogic.getInstance().getMe().getCards().get(cardIndex));
         noSelectedCards++;
     }
 
@@ -230,14 +242,14 @@ public class PlayPanel extends JFrame {
         }
 
         StringBuilder sb = new StringBuilder(512);
-        sb.append("<p><style color=white>Points:<br><br>");
+        sb.append("<span style color=white>Points:<br><br>");
         for(i = 0; i < GameLogic.getInstance().getPlayers().size(); i++){
             sb.append(GameLogic.getInstance().getPlayers().get(i).getName());
             sb.append(": ");
             sb.append(GameLogic.getInstance().getPlayers().get(i).getPoints());
             sb.append("<br>");
         }
-        sb.append("</p>");
+        sb.append("</span>");
 
         scores.setText(sb.toString());
 
