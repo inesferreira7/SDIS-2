@@ -103,7 +103,9 @@ public class PlayPanel extends JFrame {
                     Player winner = logic.getPlayerByAnswerOrder(playerIndex);
                         String cmd = MessageType.WINNERPICK.name() +
                                 " " +
-                                logic.getPlayers().indexOf(winner);
+                                logic.getPlayers().indexOf(winner) +
+                                " " +
+                                logic.getRoundNr();
                     GameLogic.getInstance().broadcastMessage(cmd);
                 }
             }

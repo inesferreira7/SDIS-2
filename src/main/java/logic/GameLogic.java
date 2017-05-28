@@ -30,6 +30,7 @@ public class GameLogic {
     private Stack<WhiteCard> whiteCardsDeck;
     private Stack<BlackCard> blackCardsdeck;
     private int czar;
+    private int roundNr;
     private int[] leaders = new int[]{0, 1, 2};
     private Player me;
     private int gameState;
@@ -41,6 +42,7 @@ public class GameLogic {
         whiteCardsDeck = new Stack<>();
         blackCardsdeck = new Stack<>();
         czar = -1;
+        roundNr = -1;
 
         createDecks();
     }
@@ -282,6 +284,7 @@ public class GameLogic {
 
     public void broadcastMessage(String message, ArrayList<Player> playersList) {
         ArrayList<Player> missingACK = new ArrayList<>(playersList);
+        System.out.println("Sending " + message);
         missingACK.remove(me);
         CommunicationThread.getInstance().processCommand(message);
 
@@ -346,8 +349,13 @@ public class GameLogic {
         return null;
     }
 
+    public int getRoundNr() {
+        return roundNr;
+    }
+
     public void prepareNewRound() {
         changeCzar();
+        roundNr++;
         blackCard = null;
         whiteCardPicks = new LinkedHashMap<>();
         if (players.indexOf(me) == getLeaderIndex())

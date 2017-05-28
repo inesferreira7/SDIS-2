@@ -61,6 +61,7 @@ public class CommunicationThread extends Thread {
         String[] cmdSplit = cmd.split(" ");
         if(receivedCommands.contains(cmd))
             return MessageType.ACK.name() + " " + cmdSplit[0];
+        receivedCommands.add(cmd);
 
         if (cmdSplit[0].equals(MessageType.BLACKCARD.name())) {
             if (cmdSplit.length == 2) {
@@ -92,7 +93,7 @@ public class CommunicationThread extends Thread {
                 }
             }
         } else if (cmdSplit[0].equals(MessageType.WINNERPICK.name())) {
-            if (cmdSplit.length == 2) {
+            if (cmdSplit.length == 3) {
                 logic.getPlayers().get(Integer.parseInt(cmdSplit[1])).addPoints(1);
                 logic.setGameState(GameLogic.END_ROUND);
                 return MessageType.ACK.name() + " " + MessageType.WINNERPICK.name();
