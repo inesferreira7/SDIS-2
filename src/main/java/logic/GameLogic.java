@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by up201404990 on 25-05-2017.
  */
 public class GameLogic {
-    public static final int MIN_NUM_PLAYERS = 1, MAX_NUM_PLAYERS = 6;
+    public static final int MIN_NUM_PLAYERS = 3, MAX_NUM_PLAYERS = 6;
     public static final int PLAYERS_PICKING = 0, PICK_WINNER = 1, END_ROUND = 2;
     public static final String[] lastMessage = {"NEWCZAR", "BLACKCARD", "PICKINGCARDS", "ELECTBEST", "RETRIEVECARD"};
     public static final int WHITECARDS_PER_PLAYER = 5;
